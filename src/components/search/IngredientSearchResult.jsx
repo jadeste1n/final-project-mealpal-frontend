@@ -163,12 +163,12 @@ const IngredientSearchResult = ({ ingredient }) => {
 				body: JSON.stringify({
 					type: "product",
 					data: {
-						referenceId: fullProduct.id, // id from food db
+						referenceId: fullProduct.id || fullProduct.referenceId, // id from food db
 						name: fullProduct.name,
 						brand: fullProduct.brand || "",
 						category: fullProduct.category || "other",
 						nutrition: fullProduct.nutrition || {},
-						source: fullProduct.source || "recipe",
+						source: fullProduct.source || "",
 					},
 				}),
 			});
