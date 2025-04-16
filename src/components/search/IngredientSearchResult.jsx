@@ -241,14 +241,14 @@ const IngredientSearchResult = ({ ingredient }) => {
 				</div>
 				<div>
 					<button
-						className="btn btn-square btn-ghost min-w-fit p-6
+						className="btn btn-square btn-ghost min-w-fit p-3
 "
 						onClick={handleOpenDetails}
 					>
-						<Eye /> {/* opens pop up with Ingredient Details */}
+						<Eye className="stroke-blue-600"/> {/* opens pop up with Ingredient Details */}
 					</button>
 					<button
-						className="btn btn-square btn-ghost min-w-fit p-6
+						className="btn btn-square btn-ghost min-w-fit p-3
 "
 						onClick={
 							isFavorite ? handleRemoveFromFavorites : handleAddToFavorites
@@ -263,15 +263,15 @@ const IngredientSearchResult = ({ ingredient }) => {
 					</button>
 
 					<button
-						className="btn btn-square btn-ghost min-w-fit pl-6"
+						className="btn btn-square btn-ghost min-w-fit pl-3"
 						onClick={
 							isInSelection ? handleRemoveFromSelection : handleAddToSelection
 						}
 					>
 						{isInSelection ? (
-							<CircleMinus className="stroke-gray-500" /> // Remove from selection
+							<CircleMinus className="stroke-red-800" /> // Remove from selection
 						) : (
-							<CirclePlus className="stroke-gray-500" /> // Add to selection
+							<CirclePlus className="stroke-green-600" /> // Add to selection
 						)}
 					</button>
 				</div>

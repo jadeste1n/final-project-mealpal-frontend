@@ -139,8 +139,8 @@ const SearchBar = ({ changeSearchQuery }) => {
 	}, [delayedQuery, selectedTab]);
 
 	return (
-		<form>
-			<label className="input">
+		<form className="mb-6 mt-4">
+			<label className="input w-full ">
 				<svg
 					className="h-[1em] opacity-50"
 					xmlns="http://www.w3.org/2000/svg"
