@@ -6,6 +6,7 @@ import Modal from "../../components/general/Modal";
 import { AppContext } from "../../App";
 import { useState, useContext } from "react";
 
+
 const Search = () => {
 	const {
 		searchResults,
@@ -21,8 +22,8 @@ const Search = () => {
 	return (
 		<div className="pb-32">
 			{/* Selection Where to Add Items To -> Controls Conditional Rendering */}
-			<select
-				className="select select-ghost"
+			<select 
+				className="select select-ghost mb-4 w-full text-center bg-primary"
 				value={addToSelection}
 				onChange={(e) => setAddToSelection(e.target.value)}
 			>

@@ -13,26 +13,30 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 				<input
 					type="radio"
 					name="my_tabs_1"
-					className="tab"
+					className="tab text-primary hover:text-primary"
 					aria-label="New"
 					onClick={() => setSelectedTab("new")}
 					defaultChecked
 				/>
-				<div className="tab-content border-base-300 bg-base-100 p-10">
+				<div className="tab-content border-base-300 bg-base-100 p-0">
 					{" "}
-					{isLoading && <div className="text-xs text-muted">Searching...</div>}
+					{isLoading && (
+						<div className="text-xs text-muted pt-10 pb-10">Searching...</div>
+					)}
 					{!isLoading &&
 					ingredients.length === 0 &&
 					delayedQuery.length !== 0 ? (
-						<p className="text-sm opacity-70">No ingredients found.</p>
+						<p className="text-sm opacity-70 pt-10 pb-10">
+							No ingredients found.
+						</p>
 					) : !isLoading &&
 					  ingredients.length === 0 &&
 					  delayedQuery.length === 0 ? (
-						<p className="text-sm opacity-70">Type for Search</p>
+						<p className="text-sm opacity-70 pt-10 pb-10">Type for Search</p>
 					) : (
 						!isLoading && (
 							<ul className="list bg-base-100 rounded-box shadow-md">
-								<li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+								<li className="pt-6 pb-4 text-xs opacity-60 tracking-wide ">
 									{ingredients.length} Results found
 								</li>
 								{ingredients.map((ingredient) => (
@@ -48,18 +52,22 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 				<input
 					type="radio"
 					name="my_tabs_1"
-					className="tab"
+					className="tab text-primary hover:text-primary"
 					aria-label="Favorites"
 					onClick={() => setSelectedTab("favorites")}
 				/>
-				<div className="tab-content border-base-300 bg-base-100 p-10">
-					{isLoading && <div className="text-xs text-muted">Searching...</div>}
+				<div className="tab-content border-base-300 bg-base-100 p-0">
+					{isLoading && (
+						<div className="text-xs text-muted pt-10 pb-10">Searching...</div>
+					)}
 					{!isLoading && ingredients.length === 0 ? (
-						<p className="text-sm opacity-70">No ingredients in Favorites.</p>
+						<p className="text-sm opacity-70 pt-10 pb-10">
+							No ingredients in Favorites.
+						</p>
 					) : (
 						!isLoading && (
 							<ul className="list bg-base-100 rounded-box shadow-md">
-								<li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+								<li className="pt-6 pb-4 text-xs opacity-60 tracking-wide">
 									{ingredients.length} Results found
 								</li>
 								{ingredients.map((ingredient) => (
@@ -75,19 +83,25 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 				<input
 					type="radio"
 					name="my_tabs_1"
-					className={`tab ${AddToSelection === "Add To Diary" ? "" : "hidden"}`}
+					className={`tab text-primary hover:text-primary ${
+						AddToSelection === "Add To Diary" ? "" : "hidden"
+					}`}
 					aria-label="Fridge"
 					onClick={() => setSelectedTab("fridge")}
 				/>
-				<div className="tab-content border-base-300 bg-base-100 p-10">
-					{isLoading && <div className="text-xs text-muted">Searching...</div>}
+				<div className="tab-content border-base-300 bg-base-100 p-0">
+					{isLoading && (
+						<div className="text-xs text-muted pt-10 pb-10">Searching...</div>
+					)}
 					{!isLoading && ingredients.length === 0 ? (
-						<p className="text-sm opacity-70">No ingredients in Fridge.</p>
+						<p className="text-sm opacity-70 pt-10 pb-10">
+							No ingredients in Fridge.
+						</p>
 					) : (
 						!isLoading &&
 						ingredients.length !== 0 && (
 							<ul className="list bg-base-100 rounded-box shadow-md">
-								<li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+								<li className="pt-6 pb-4 text-xs opacity-60 tracking-wide">
 									{ingredients.length} Results found
 								</li>
 								{ingredients.map((ingredient) => (
@@ -103,11 +117,13 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 				<input
 					type="radio"
 					name="my_tabs_1"
-					className={`tab ${AddToSelection === "Add To Diary" ? "" : "hidden"}`}
+					className={`tab text-primary hover:text-primary ${
+						AddToSelection === "Add To Diary" ? "" : "hidden"
+					}`}
 					aria-label="Recipes"
 					onClick={() => setSelectedTab("recipes")}
 				/>
-				<div className="tab-content border-base-300 bg-base-100 p-10">
+				<div className="tab-content border-base-300 bg-base-100 p-0">
 					List of Recipes
 				</div>
 			</div>

@@ -3,6 +3,7 @@ import IngredientSearchResult from "./IngredientSearchResult";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { useContext } from "react";
 import { AppContext } from "../../App";
+import { Refrigerator, BookOpenCheck } from "lucide-react";
 
 const BottomDrawer = ({ selection }) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -131,9 +132,14 @@ const BottomDrawer = ({ selection }) => {
 				onClick={toggle}
 			>
 				<div className="flex flex-row justify-between items-center px-4">
-					<p className="text-sm">{selection.length} Selected Items</p>
+					<p className="text-sm text-gray-400">
+						<span className="font-bold text-white bg-primary p-0 px-1 rounded-2xl mr-1">
+							{selection.length}
+						</span>{" "}
+						Selected Items
+					</p>
 					<div
-						className="w-fit flex flex-row gap-8
+						className="w-fit flex flex-row gap-4
 "
 					>
 						{addToSelection === "Add To Diary" ? (
@@ -141,14 +147,14 @@ const BottomDrawer = ({ selection }) => {
 								className="btn btn-sm btn-primary"
 								onClick={handleAddToDiary}
 							>
-								Add To Diary
+								Add To Diary <BookOpenCheck />
 							</button>
 						) : (
 							<button
 								className="btn btn-sm btn-primary"
 								onClick={handleAddToFridge}
 							>
-								Add To Fridge
+								Add To Fridge <Refrigerator />
 							</button>
 						)}
 
