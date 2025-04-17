@@ -43,6 +43,7 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 									<IngredientSearchResult
 										key={ingredient._id || ingredient.id}
 										ingredient={ingredient}
+										inDrawer={false}
 									/>
 								))}
 							</ul>
@@ -74,6 +75,7 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 									<IngredientSearchResult
 										key={ingredient._id || ingredient.id}
 										ingredient={ingredient}
+										inDrawer={false}
 									/>
 								))}
 							</ul>
@@ -108,6 +110,7 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 									<IngredientSearchResult
 										key={ingredient._id || ingredient.id}
 										ingredient={ingredient}
+										inDrawer={false}
 									/>
 								))}
 							</ul>
