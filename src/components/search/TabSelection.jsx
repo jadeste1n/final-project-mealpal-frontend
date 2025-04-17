@@ -18,7 +18,7 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 					onClick={() => setSelectedTab("new")}
 					defaultChecked
 				/>
-				<div className="tab-content border-base-300 bg-base-100 p-0">
+				<div className="tab-content rounded-md  border-base-300 bg-base-100 p-0">
 					{" "}
 					{isLoading && (
 						<div className="text-xs text-muted pt-10 pb-10">Searching...</div>
@@ -57,7 +57,7 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 					aria-label="Favorites"
 					onClick={() => setSelectedTab("favorites")}
 				/>
-				<div className="tab-content border-base-300 bg-base-100 p-0">
+				<div className="tab-content rounded-md  border-base-300 bg-base-100 p-0">
 					{isLoading && (
 						<div className="text-xs text-muted pt-10 pb-10">Searching...</div>
 					)}
@@ -91,7 +91,7 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 					aria-label="Fridge"
 					onClick={() => setSelectedTab("fridge")}
 				/>
-				<div className="tab-content border-base-300 bg-base-100 p-0">
+				<div className="tab-content rounded-md border-base-300 bg-base-100 p-0">
 					{isLoading && (
 						<div className="text-xs text-muted pt-10 pb-10">Searching...</div>
 					)}
@@ -126,7 +126,7 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 					aria-label="Recipes"
 					onClick={() => setSelectedTab("recipes")}
 				/>
-				<div className="tab-content border-base-300 bg-base-100 p-0">
+				<div className="tab-content border-base-300 rounded-md  bg-base-100 p-0">
 					List of Recipes
 				</div>
 			</div>

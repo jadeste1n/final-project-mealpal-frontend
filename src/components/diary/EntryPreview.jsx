@@ -44,10 +44,10 @@ const EntryPreview = ({ item }) => {
 	//List Element
 	return (
 		<>
-			<li className="list-row flex flex-row justify-between">
+			<li className="list-row flex flex-row justify-between p-3">
 				<div className="flex flex-col justify-start content-start">
-					<p className="text-left">{item.item.name}</p>
-					<p className="text-left">{item.item?.brand}</p>
+					<p className="text-sm text-left font-bold">{item.item.name}</p>
+					<p className="text-sm text-left">{item.item?.brand}</p>
 				</div>
 				<div className="flex flex-row">
 					<button

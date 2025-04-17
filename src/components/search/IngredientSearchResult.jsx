@@ -256,7 +256,7 @@ const IngredientSearchResult = ({ ingredient, inDrawer = false }) => {
 		<>
 			<li className="list-row flex flex-row justify-between">
 				<div className="flex flex-col justify-start content-start">
-					<p className="text-left">{ingredientName}</p>
+					<p className="text-left font-bold">{ingredientName}</p>
 					<p className="text-left">{ingredientBrand}</p>
 				</div>
 				<div className="flex flex-row">
