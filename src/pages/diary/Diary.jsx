@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"; // Importing the icons
 import "cally"; //calender dependency
 import EntryPreview from "../../components/diary/EntryPreview"; // Importing the EntryPreview component
 import Modal from "../../components/general/Modal";
+import EnergySummaryChart from "../../components/inventory/EnergySummaryChart";
 
 const Diary = () => {
 	// variables ----------------
@@ -15,6 +16,12 @@ const Diary = () => {
 		return today.toISOString().split("T")[0]; // Format as YYYY-MM-DD (Date only) -> no time & time zone
 	});
 	const categories = ["uncategorized", "breakfast", "lunch", "dinner", "snack"];
+	const [totalNutrition, setTotalNutrition] = useState({
+		calories: 0,
+		protein: 0,
+		carbs: 0,
+		fat: 0,
+	  });
 
 	const fetchDiaryEntries = async (date) => {
 		try {
@@ -39,6 +46,24 @@ const Diary = () => {
 	useEffect(() => {
 		fetchDiaryEntries(date);
 	}, [date]);
+
+	useEffect(() => {//whenever entries changes update totalNutrition
+		const total = entries.reduce(
+		  (acc, entry) => {
+			const nutrition = entry.item?.nutrition || {}; //check if nutrition is available otherwise set empty
+			acc.calories += nutrition.calories || 0; //accumulate calory item by adding & assigning to variable
+			acc.protein += nutrition.protein || 0;
+			acc.carbs += nutrition.carbs || 0;
+			acc.fat += nutrition.fat || 0;
+			// Return the updated total for the next loop iteration
+			return acc;
+		  },
+		// Initial value of the accumulator
+		  { calories: 0, protein: 0, carbs: 0, fat: 0 }
+		);
+	  
+		setTotalNutrition(total);
+	  }, [entries]);
 
 	// Utils ----------------
 
@@ -71,7 +96,7 @@ const Diary = () => {
 	};
 
 	return (
-		<div className="p-4 space-y-4 ">
+		<div className="space-y-4 pb-32 ">
 			<div className="flex flex-row justify-center items-center content-center gap-2 mb-8">
 				{/* DaisyUI Dropdown Implementation */}
 				<div className="dropdown">
@@ -106,6 +131,11 @@ const Diary = () => {
 						</calendar-date>
 					</div>
 				</div>
+			</div>
+
+		<div className="p-12 bg-base-200 rounded-lg shadow-md flex flex-col items-center text-center">
+			<p className="pb-8">Macronutrient Overview of the Day</p>
+			<EnergySummaryChart nutrition={totalNutrition} />
 			</div>
 
 			{categories.map((category) => (

@@ -36,7 +36,7 @@ const EntryDetail = (item ) => {
 						item: { ...entry.item, quantity: productQuantity },
 					};
 				}
-				return item;
+				return entry;
 			})
 		);
 	}, [productQuantity, product, _id, setEntries]);
