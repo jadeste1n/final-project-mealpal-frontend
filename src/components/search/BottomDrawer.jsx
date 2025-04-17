@@ -15,8 +15,6 @@ const BottomDrawer = ({ selection }) => {
 
 	//Button Action: Add selected items to fridge
 	const handleAddToFridge = async () => {
-		
-
 		// make a loop for every item since backend expects a single object, not an array.
 		for (const item of selection) {
 			// Check if the item has the necessary data
@@ -60,7 +58,7 @@ const BottomDrawer = ({ selection }) => {
 					itemNutrition
 				);
 				if (!res.ok) throw new Error("Failed to add item to fridge");
-				console.log(`Saved: ${itemName} to fridge: ${item}`); //DEBUG
+				console.log(`Saved ${itemName} to fridge: ${item}`); //DEBUG
 
 				addedToBackend.push(item); // track items that are successfully added to backend
 			} catch (error) {
@@ -99,19 +97,19 @@ const BottomDrawer = ({ selection }) => {
 					body: JSON.stringify({
 						//convert object to fridge item
 						//date: -> use default of bk model
-						meal: "uncategorised", //default uncategorised
+						//meal: "uncategorised", //default uncategorised
 						item: {
 							name: itemName,
 							brand: itemBrand,
 							quantity: item.quantity || 1, //default to one
 							category: itemCategory, // default if none is given
 							nutrition: itemNutrition,
+							source: itemSource,
 						},
-						source: itemSource,
 					}),
 				});
 				if (!res.ok) throw new Error("Failed to add item to diary");
-				console.log(`Saved: ${itemName} to diary: ${item}`); //DEBUG
+				console.log(`Saved ${itemName} to diary: ${item}`); //DEBUG
 
 				addedToBackend.push(item); // track items that are successfully added to backend
 			} catch (error) {
