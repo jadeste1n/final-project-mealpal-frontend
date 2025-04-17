@@ -3,26 +3,28 @@ import { AppContext } from "../../App";
 import IngredientSearchResult from "../../components/search/IngredientSearchResult";
 import { ChevronLeft, ChevronRight } from "lucide-react"; // Importing the icons from lucide-react
 import "cally"; //calender dependency
+import EntryPreview from "../../components/diary/EntryPreview"; // Importing the EntryPreview component
+import Modal from "../../components/general/Modal";
 
 const Diary = () => {
 	// variables ----------------
-	const { backendUrl } = useContext(AppContext);
+	const { backendUrl, entries, setEntries, modalState, closeModal , content} =
+		useContext(AppContext);
 	const [date, setDate] = useState(() => {
 		const today = new Date(); //set day to today
 		return today.toISOString().split("T")[0]; // Format as YYYY-MM-DD (Date only) -> no time & time zone
 	});
-	const [entries, setEntries] = useState([]);
 	const categories = ["uncategorized", "breakfast", "lunch", "dinner", "snack"];
 
-	//-> FETCH IS NOT WORKING YET!
 	const fetchDiaryEntries = async (date) => {
 		try {
-			const formattedDate = new Date(date + "T00:00:00.000Z"); // Add time to set it as midnight UTC
+			const formattedDate = new Date(date);
 			const stringDate = formattedDate.toISOString(); // converts the JavaScript Date object into a string representation in the ISO 8601 format
 
 			const res = await fetch(`${backendUrl}/diary?date=${stringDate}`, {
 				credentials: "include",
 			});
+			console.log(`fetching Data for ${stringDate}`);
 			if (!res.ok) throw new Error("Failed to fetch diary entries");
 			const data = await res.json();
 			setEntries(data || []);
@@ -32,12 +34,11 @@ const Diary = () => {
 	};
 
 	// Effects ----------------
-	/*
+
 	// Fetch diary entries when the component mounts or when the date changes
-  useEffect(() => {
-    fetchDiaryEntries(date);
-  }, [date]);
-  */
+	useEffect(() => {
+		fetchDiaryEntries(date);
+	}, [date]);
 
 	// Utils ----------------
 
@@ -82,7 +83,7 @@ const Diary = () => {
 							size={24}
 						/>
 						<button
-							className="input w-100 text-center flex justify-center items-center bg-primary"
+							className="input w-100 text-center flex font-bold justify-center items-center bg-primary"
 							id="cally1"
 							data-dropdown-toggle="cally-popover1"
 						>
@@ -110,23 +111,28 @@ const Diary = () => {
 			{categories.map((category) => (
 				<div key={category} className="collapse collapse-arrow bg-base-200">
 					<input type="checkbox" defaultChecked />
-					<div className="collapse-title font-medium capitalize text-left">
-						{category}
+					<div className="collapse-title text-sm capitalize text-left text-primary flex justify-between">
+						<span>{category}</span>
+						<span className="text-xs font-bold text-gray-500 my-auto">
+							({groupedEntries[category]?.length || 0})
+						</span>
 					</div>
 					{/* Use IngredientSearchComponent for testing right now */}
 					<div className="collapse-content">
 						<ul className="space-y-2">
 							{groupedEntries[category]?.map((entry) => (
-								<IngredientSearchResult
-									key={entry._id}
-									ingredient={entry}
-									inDrawer={false}
-								/>
+								<EntryPreview key={entry._id} item={entry} />
 							))}
 						</ul>
 					</div>
 				</div>
 			))}
+
+			{modalState && (
+				<Modal isOpen={modalState} onClose={closeModal}>
+					{content}
+				</Modal>
+			)}
 		</div>
 	);
 };

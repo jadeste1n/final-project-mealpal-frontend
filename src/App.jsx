@@ -33,6 +33,9 @@ function App() {
 	});
 	const [favorites, setFavorites] = useState([]);
 
+	//Diary variables
+	const [entries, setEntries] = useState([]);
+
 	// Modal utils-------
 	const openModal = (content) => {
 		setContent(content);
@@ -96,6 +99,8 @@ function App() {
 				closeModal,
 				setModalState,
 				modalState,
+				entries,
+				setEntries,
 			}}
 		>
 			<BrowserRouter>
