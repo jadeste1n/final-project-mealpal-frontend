@@ -8,13 +8,14 @@ import { Refrigerator, BookOpenCheck } from "lucide-react";
 const BottomDrawer = ({ selection }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { setSelection, addToSelection, backendUrl } = useContext(AppContext);
+	const addedToBackend = [];
 
 	//Open/Close Drawer
 	const toggle = () => setIsOpen(!isOpen);
 
 	//Button Action: Add selected items to fridge
 	const handleAddToFridge = async () => {
-		const addedToBackend = [];
+		
 
 		// make a loop for every item since backend expects a single object, not an array.
 		for (const item of selection) {
@@ -39,7 +40,7 @@ const BottomDrawer = ({ selection }) => {
 						name: itemName, //empty array if no name is set
 						brand: itemBrand, //empty array if no brand is set
 						referenceId: referenceId,
-						quantity: 1, //default for now
+						quantity: item.quantity || 1, //default for now
 						category: itemCategory, // default if none is given
 						nutrition: itemNutrition,
 					}),
@@ -59,7 +60,7 @@ const BottomDrawer = ({ selection }) => {
 					itemNutrition
 				);
 				if (!res.ok) throw new Error("Failed to add item to fridge");
-				console.log(`Saved: ${itemName} to fridge`); //DEBUG
+				console.log(`Saved: ${itemName} to fridge: ${item}`); //DEBUG
 
 				addedToBackend.push(item); // track items that are successfully added to backend
 			} catch (error) {
@@ -97,12 +98,12 @@ const BottomDrawer = ({ selection }) => {
 					},
 					body: JSON.stringify({
 						//convert object to fridge item
-						date: new Date(),
+						//date: -> use default of bk model
 						meal: "uncategorised", //default uncategorised
 						item: {
 							name: itemName,
 							brand: itemBrand,
-							quantity: 1, //default for now
+							quantity: item.quantity || 1, //default to one
 							category: itemCategory, // default if none is given
 							nutrition: itemNutrition,
 						},
@@ -110,13 +111,22 @@ const BottomDrawer = ({ selection }) => {
 					}),
 				});
 				if (!res.ok) throw new Error("Failed to add item to diary");
-				console.log(`Saved: ${itemName} to diary`); //DEBUG
+				console.log(`Saved: ${itemName} to diary: ${item}`); //DEBUG
 
-				//remove item from selection if successfully added to fridge & empty localStorage off it
+				addedToBackend.push(item); // track items that are successfully added to backend
 			} catch (error) {
 				console.error(`Error saving ${itemName}:`, error.message);
 			}
 		}
+
+		// Remove successfully added items to backend from selection
+		const updatedSelection = selection.filter(
+			(item) => !addedToBackend.includes(item)
+		);
+		setSelection(updatedSelection);
+
+		//Update localStorage
+		localStorage.setItem("selection", JSON.stringify(updatedSelection));
 	};
 
 	return (
@@ -177,6 +187,7 @@ const BottomDrawer = ({ selection }) => {
 						<IngredientSearchResult
 							key={item._id || item.id}
 							ingredient={item}
+							inDrawer={true}
 						/>
 					))}
 				</ul>
