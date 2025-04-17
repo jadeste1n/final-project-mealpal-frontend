@@ -8,7 +8,7 @@ import ProtectedLayout from "./layouts/ProtectedLayout";
 import InventoryOverview from "./pages/inventory/InventoryOverview";
 import Diary from "./pages/diary/diary";
 import Search from "./pages/search/Search";
-import CreateRecipe from "./pages/recipes/CreateRecipe";
+import RecipeRoute from "src/pages/recipes/RecipeRoute.jsx";
 import AccountSettings from "./pages/account/AccountSettings";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/SignUp";
@@ -108,7 +108,7 @@ function App() {
 								<Route index element={<InventoryOverview />} />
 								<Route path="/diary" element={<Diary />} />
 								<Route path="/search" element={<Search />} />
-								<Route path="/recipes" element={<CreateRecipe />} />
+								<Route path="/recipes/*" element={<RecipeRoute />} />
 								<Route path="/account" element={<AccountSettings />} />
 							</Route>
 						</Route>
