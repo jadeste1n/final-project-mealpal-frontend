@@ -1,7 +1,7 @@
 
 import React, {useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { api } from 'utils/axiosInstance.jsx';
+import { api } from "../../utils/axiosInstance";
 import {  ArrowLeft,CookingPot,NotebookPen,BookmarkPlus, Plus,Minus} from 'lucide-react';
 import RecipeIngredientsTable from '../../components/recipes/RecipeIngredientsTable';
 
