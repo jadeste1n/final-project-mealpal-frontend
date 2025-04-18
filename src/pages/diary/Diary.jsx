@@ -9,19 +9,20 @@ import EnergySummaryChart from "../../components/inventory/EnergySummaryChart";
 
 const Diary = () => {
 	// variables ----------------
-	const { backendUrl, entries, setEntries, modalState, closeModal , content} =
+	const { backendUrl , entries, setEntries, modalState, closeModal, content } =
 		useContext(AppContext);
 	const [date, setDate] = useState(() => {
 		const today = new Date(); //set day to today
 		return today.toISOString().split("T")[0]; // Format as YYYY-MM-DD (Date only) -> no time & time zone
 	});
-	const categories = ["uncategorized", "breakfast", "lunch", "dinner", "snack"];
+	const categories = ["uncategorised", "Breakfast", "Lunch", "Dinner", "Snack"];
 	const [totalNutrition, setTotalNutrition] = useState({
 		calories: 0,
 		protein: 0,
 		carbs: 0,
 		fat: 0,
-	  });
+	});
+	const [groupedEntries, setGroupedEntries] = useState({});
 
 	const fetchDiaryEntries = async (date) => {
 		try {
@@ -35,9 +36,20 @@ const Diary = () => {
 			if (!res.ok) throw new Error("Failed to fetch diary entries");
 			const data = await res.json();
 			setEntries(data || []);
+			console.log(data)
 		} catch (err) {
 			console.error(err.message);
 		}
+	};
+
+	// Utils ----------------
+	const groupEntriesByCategory = (entries, categories) => {
+		return categories.reduce((acc, category) => {
+			acc[category] = entries.filter(
+				(e) => (e.meal || "uncategorized") === category
+			);
+			return acc;
+		}, {});
 	};
 
 	// Effects ----------------
@@ -47,32 +59,29 @@ const Diary = () => {
 		fetchDiaryEntries(date);
 	}, [date]);
 
-	useEffect(() => {//whenever entries changes update totalNutrition
+	useEffect(() => {
+		//whenever entries changes update totalNutrition
 		const total = entries.reduce(
-		  (acc, entry) => {
-			const nutrition = entry.item?.nutrition || {}; //check if nutrition is available otherwise set empty
-			acc.calories += nutrition.calories || 0; //accumulate calory item by adding & assigning to variable
-			acc.protein += nutrition.protein || 0;
-			acc.carbs += nutrition.carbs || 0;
-			acc.fat += nutrition.fat || 0;
-			// Return the updated total for the next loop iteration
-			return acc;
-		  },
-		// Initial value of the accumulator
-		  { calories: 0, protein: 0, carbs: 0, fat: 0 }
+			(acc, entry) => {
+				const nutrition = entry.item?.nutrition || {}; //check if nutrition is available otherwise set empty
+				acc.calories += nutrition.calories || 0; //accumulate calory item by adding & assigning to variable
+				acc.protein += nutrition.protein || 0;
+				acc.carbs += nutrition.carbs || 0;
+				acc.fat += nutrition.fat || 0;
+				// Return the updated total for the next loop iteration
+				return acc;
+			},
+			// Initial value of the accumulator
+			{ calories: 0, protein: 0, carbs: 0, fat: 0 }
 		);
-	  
+
 		setTotalNutrition(total);
-	  }, [entries]);
+	}, [entries]);
 
-	// Utils ----------------
-
-	const groupedEntries = categories.reduce((acc, category) => {
-		acc[category] = entries.filter(
-			(e) => (e.category || "uncategorized") === category
-		);
-		return acc;
-	}, {});
+	useEffect(() => {
+		const groupEntries = groupEntriesByCategory(entries, categories);
+		setGroupedEntries(groupEntries);
+	}, [entries]); // Whenever `entries` changes, update the `groupedEntries`
 
 	//Button Actions ----------------
 	const handleDateChange = (e) => {
@@ -108,7 +117,7 @@ const Diary = () => {
 							size={24}
 						/>
 						<button
-							className="input w-100 text-center flex font-bold justify-center items-center bg-primary"
+							className="input w-100 text-center flex font-bold justify-center items-center bg-primary border-0 text-white"
 							id="cally1"
 							data-dropdown-toggle="cally-popover1"
 						>
@@ -133,16 +142,18 @@ const Diary = () => {
 				</div>
 			</div>
 
-		<div className="p-12 bg-base-200 rounded-lg shadow-md flex flex-col items-center text-center">
-			<p className="pb-8">Macronutrient Overview of the Day</p>
-			<EnergySummaryChart nutrition={totalNutrition} />
+			<div className="p-12 pt-8 bg-base-200 rounded-lg shadow-md flex flex-col items-center text-center">
+				<p className="pb-10 text-sm text-gray-400">
+					Macronutrient Overview of the Day
+				</p>
+				<EnergySummaryChart nutrition={totalNutrition} />
 			</div>
 
 			{categories.map((category) => (
 				<div key={category} className="collapse collapse-arrow bg-base-200">
 					<input type="checkbox" defaultChecked />
 					<div className="collapse-title text-sm capitalize text-left text-primary flex justify-between">
-						<span>{category}</span>
+						<span className="font-bold">{category}</span>
 						<span className="text-xs font-bold text-gray-500 my-auto">
 							({groupedEntries[category]?.length || 0})
 						</span>
