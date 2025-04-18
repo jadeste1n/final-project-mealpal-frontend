@@ -46,7 +46,7 @@ const Diary = () => {
 	const groupEntriesByCategory = (entries, categories) => {
 		return categories.reduce((acc, category) => {
 			acc[category] = entries.filter((e) => {
-				const meal = e.meal ? e.meal.toLowerCase() : "uncategorized";
+				const meal = e.meal ? e.meal.toLowerCase() : "uncategorised";
 				return meal === category.toLowerCase();
 			});
 			return acc;
