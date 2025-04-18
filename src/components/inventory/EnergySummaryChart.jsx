@@ -73,7 +73,7 @@ const EnergySummaryChart = ({ nutrition }) => {
 				{/* Calorie count always visible */}
 				<div className="absolute inset-0 flex flex-col items-center justify-center text-sm font-semibold pointer-events-none">
 					<div
-						className={`text-xl ${isDiary ? "text-white" : "text-gray-800"}`}
+						className={`text-xl ${isDiary ? "text-primary" : "text-gray-800"}`}
 					>
 						{Math.round(calories) || 0}
 					</div>
