@@ -73,7 +73,7 @@ const FridgeItem = ({
   return (
     <>
       {/* Card-style item row */}
-      <div className="flex items-center justify-between bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition p-4 rounded-xl mb-3">
+      <div className="flex items-center justify-between bg-base-200 transition p-4 rounded-xl mb-3">
         <div>
           <span className="text-base font-semibold block">
             {toTitleCase(name)}
@@ -126,7 +126,7 @@ const FridgeItem = ({
             Nutritional information per 100g
           </p>
 
-          <div className="bg-gray-100 p-4 rounded-md mb-6">
+          <div className="bg-base-200 p-4 rounded-md mb-6">
             <p className="text-sm font-medium mb-2">Energy Summary</p>
             <EnergySummaryChart nutrition={nutrition} />
           </div>

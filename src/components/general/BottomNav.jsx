@@ -1,12 +1,19 @@
 import { Link, useLocation } from "react-router-dom";
-import { Refrigerator, BookOpenCheck, Soup, User, Plus, Bookmark } from "lucide-react";
+import {
+  Refrigerator,
+  BookOpenCheck,
+  Soup,
+  User,
+  Plus,
+  Bookmark,
+} from "lucide-react";
 
 const BottomNav = () => {
   const { pathname } = useLocation();
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
-      <div className="dock dock-xs bg-gray-300 relative">
+      <div className="dock dock-xs bg-base-300 relative">
         {/* Floating Action Button inside the dock */}
         <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
           <Link to="/search">

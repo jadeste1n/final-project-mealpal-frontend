@@ -34,21 +34,32 @@ function App() {
   });
   const [favorites, setFavorites] = useState([]);
 
+  //Diary variables
+  const [entries, setEntries] = useState([]);
 
-	//Diary variables
-	const [entries, setEntries] = useState([]);
-
-	// Modal utils-------
-	const openModal = (content) => {
-		setContent(content);
-		setModalState(true);
-	};
-
+  // Modal utils-------
+  const openModal = (content) => {
+    setContent(content);
+    setModalState(true);
+  };
 
   const closeModal = () => {
     setContent(null);
     setModalState(false);
   };
+
+  useEffect(() => {
+    // Apply dark mode preference from localStorage or system default
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
 
   //search utils-------
   //fetch all the Favorite items from backend
@@ -77,57 +88,55 @@ function App() {
     fetchFavorites();
   }, []);
 
-
-	//---------------
-	return (
-		<AppContext.Provider
-			value={{
-				searchResults,
-				setSearchResults,
-				isLoading,
-				setIsLoading,
-				delayedQuery,
-				setDelayedQuery,
-				selectedTab,
-				setSelectedTab,
-				selection,
-				setSelection,
-				addToSelection,
-				setAddToSelection,
-				favorites,
-				fetchFavorites,
-				backendUrl,
-				setContent,
-				content,
-				openModal,
-				closeModal,
-				setModalState,
-				modalState,
-				entries,
-				setEntries,
-			}}
-		>
-			<BrowserRouter>
-				<Routes>
-					{/* Root layout */}
-					<Route element={<RootLayout />}>
-						{/* Protected routes */}
-						<Route element={<ProtectedLayout />}>
-							<Route element={<MainLayout />}>
-								<Route index element={<InventoryOverview />} />
-								<Route path="/diary" element={<Diary />} />
-								<Route path="/search" element={<Search />} />
-								 <Route path="/recipes/*" element={<RecipeRoute />} />
-								<Route path="/account" element={<AccountSettings />} />
-							</Route>
-						</Route>
-
+  //---------------
+  return (
+    <AppContext.Provider
+      value={{
+        searchResults,
+        setSearchResults,
+        isLoading,
+        setIsLoading,
+        delayedQuery,
+        setDelayedQuery,
+        selectedTab,
+        setSelectedTab,
+        selection,
+        setSelection,
+        addToSelection,
+        setAddToSelection,
+        favorites,
+        fetchFavorites,
+        backendUrl,
+        setContent,
+        content,
+        openModal,
+        closeModal,
+        setModalState,
+        modalState,
+        entries,
+        setEntries,
+      }}
+    >
+      <BrowserRouter>
+        <Routes>
+          {/* Root layout */}
+          <Route element={<RootLayout />}>
+            {/* Protected routes */}
+            <Route element={<ProtectedLayout />}>
+              <Route element={<MainLayout />}>
+                <Route index element={<InventoryOverview />} />
+                <Route path="/diary" element={<Diary />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/recipes/*" element={<RecipeRoute />} />
+                <Route path="/account" element={<AccountSettings />} />
+              </Route>
+            </Route>
 
             {/* Public routes */}
-			<Route element={<AppLayout />}>
-            <Route path="/register" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-			</Route>
+            <Route element={<AppLayout />}>
+              <Route path="/register" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
