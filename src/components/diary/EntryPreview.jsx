@@ -6,7 +6,7 @@ import EntryDetail from "./EntryDetail";
 const EntryPreview = ({ item }) => {
 	//--------------------VARIABLES
 	const { backendUrl, openModal, setEntries } = useContext(AppContext);
-    const { _id } = item;
+	const { _id } = item;
 
 	//--------------------EFFECTS
 
@@ -33,8 +33,8 @@ const EntryPreview = ({ item }) => {
 				// Remove locally after successful delete
 				setEntries((prevEntries) =>
 					prevEntries.filter((entry) => entry._id !== item._id)
-				)
-                console.log("Deleted entry:", item._id); //DEBUG
+				);
+				console.log("Deleted entry:", item._id); //DEBUG
 			} else {
 				console.error("Failed to delete diary entry:", res.status);
 			}
@@ -54,7 +54,9 @@ const EntryPreview = ({ item }) => {
 					<div className="flex flex-col justify-start content-start">
 						<p className="text-sm text-left font-bold">{item.item.name}</p>
 						<p className="text-sm text-left text-gray-400">
-							{item.item?.brand}
+							{item?.item?.source === "recipe"
+								? "Recipe"
+								: item?.item?.brand || "Unknown Brand"}
 						</p>
 					</div>
 				</div>
