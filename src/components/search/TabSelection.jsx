@@ -2,6 +2,7 @@ import SearchBar from "./SearchBar";
 import { useContext } from "react";
 import { AppContext } from "../../App";
 import IngredientSearchResult from "./IngredientSearchResult";
+import { Lock } from "lucide-react";
 
 const TabsSelection = ({ AddToSelection, ingredients }) => {
 	//AddToSelection = tab visibility //ingredients = List of ingredients component
@@ -126,8 +127,18 @@ const TabsSelection = ({ AddToSelection, ingredients }) => {
 					aria-label="Recipes"
 					onClick={() => setSelectedTab("recipes")}
 				/>
-				<div className="tab-content border-base-300 rounded-md  bg-base-100 p-0">
-					List of Recipes
+				<div className="tab-content border-base-300 rounded-md  bg-base-100 p-8">
+					<div className="flex items-center gap-4 p-4 border border-yellow-400/30 bg-yellow-50 text-yellow-900 rounded-2xl shadow-sm">
+						<div className="bg-yellow-100 p-2 rounded-full">
+							<Lock className="w-6 h-6 text-yellow-600" />
+						</div>
+						<div>
+							<h3 className="font-semibold text-base text-left">Unlock this Feature</h3>
+							<p className="text-sm text-yellow-800 text-left">
+								This Feature will be available as Beta for Premium Members soon. Stay tuned!
+							</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</>

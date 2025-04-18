@@ -2,11 +2,12 @@ import { Link } from "react-router-dom";
 import LogoHorizontal from "/src/assets/logo-horizontal.svg?react";
 
 const NavBar = () => {
-	const color1 = "#154836";
-	const color2 = "#154836 ";
-	const color3 = "#154836";
+	//og color: "#154836"
+	const color1 = "oklch(59.6% 0.145 163.225)";
+	const color2 = "oklch(59.6% 0.145 163.225)";
+	const color3 = "oklch(59.6% 0.145 163.225)";
 	const color4 = "#E06138 ";
-	const color5 = "#154836";
+	const color5 = "oklch(59.6% 0.145 163.225)";
 
 	return (
 		<div className="navbar bg-base-200 shadow-sm mb-6 sticky top-0 z-10 flex justify-left">

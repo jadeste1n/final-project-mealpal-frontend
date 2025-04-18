@@ -10,7 +10,7 @@ const BottomNav = () => {
         {/* Floating Action Button inside the dock */}
         <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
           <Link to="/search">
-            <button className="btn btn-lg btn-circle bg-green-400 text-white hover:bg-green-500 shadow-lg">
+            <button className="btn btn-lg btn-circle bg-[#009966] text-white hover:bg-green-500 shadow-lg">
               <Plus className="w-8 h-8" />
             </button>
           </Link>
