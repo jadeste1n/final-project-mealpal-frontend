@@ -27,10 +27,6 @@ const IngredientSearchResult = ({ ingredient, inDrawer = false }) => {
 		? ingredient.data.brand
 		: ingredient.brand;
 
-	/*
-	setModalContent(<IngredientDetail ingredient={ingredient} />);
-	setModalOpen(true);
-	*/
 	//--------------------
 
 	//NOTE ON OBJECT FORMATS:
@@ -47,9 +43,21 @@ const IngredientSearchResult = ({ ingredient, inDrawer = false }) => {
 
 	//--------------------UTILS
 	// Check if ingredient is in the selection array (selection array saves objects with _id)
-	const isInSelection = selection.some(
+	/*const isInSelection = selection.some(
 		(item) => (item._id || item.id || item.data.id) === ingredientId
-	);
+	);*/
+
+	//check if this type of item in already in selection
+	const isInSelection = selection.some((item) => {
+		const itemRefId =
+			item.referenceId || item.data?.referenceId || item.id || item.data?.id;
+		const ingredientRefId =
+			ingredient.referenceId ||
+			ingredient.data?.referenceId ||
+			ingredient.id;
+	
+		return String(itemRefId) === String(ingredientRefId);
+	});
 
 	//check if ingredient is within favorites backend
 	const isFavorite = favorites.some((fav) => {
