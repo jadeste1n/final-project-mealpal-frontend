@@ -4,14 +4,14 @@ import TabsSelection from "../../components/search/TabSelection";
 import BottomDrawer from "../../components/search/BottomDrawer";
 import Modal from "../../components/general/Modal";
 import { AppContext } from "../../App";
-import { useState, useContext } from "react";
-
+import { useState, useContext, useEffect } from "react";
 
 const Search = () => {
 	const {
 		searchResults,
 		setSearchResults,
 		selection,
+		setSelection,
 		addToSelection,
 		setAddToSelection,
 		modalState,
@@ -19,10 +19,15 @@ const Search = () => {
 		content,
 	} = useContext(AppContext);
 
+	//Prevent User from adding products diary if going back to fridge tab: If addToSelection changes, reset selection to zero
+	useEffect(() => {
+		setSelection([]);
+	}, [addToSelection]);
+
 	return (
 		<div className="pb-32">
 			{/* Selection Where to Add Items To -> Controls Conditional Rendering */}
-			<select 
+			<select
 				className="select select-ghost mb-4 w-full text-center bg-primary"
 				value={addToSelection}
 				onChange={(e) => setAddToSelection(e.target.value)}
