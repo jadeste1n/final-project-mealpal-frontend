@@ -94,9 +94,26 @@ const IngredientSearchResult = ({ ingredient, inDrawer = false }) => {
 	});*/
 
 	//check if item is in favorites db
+	/*
 	const isFavorite = favorites.some(
 		(favorite) => (favorite._id || favorite.id) === ingredientId //food db = id & mealPal db = _id
-	);
+	);*/
+	const isFavorite = favorites.some((fav) => {
+		//Ids to check against:
+			//Search results use id
+			//Fridge use _id or referenceId
+			//Favorites use _id and data.referenceId
+		const favId = fav._id;
+		const favRefId = fav.data?.referenceId;
+
+		const ingId =
+			ingredient._id ||
+			ingredient.id ||
+			ingredient.data?.id ||
+			ingredient.referenceId;
+
+		return favId === ingId || favRefId === ingId;
+	});
 
 	//--------------------EFFECTS
 	//fetch full product before adding to selection, fridge or favorites
@@ -235,7 +252,7 @@ const IngredientSearchResult = ({ ingredient, inDrawer = false }) => {
 			};
 		}
 
-		fullProduct.quantity = quantity;//add quantity set in drawer
+		fullProduct.quantity = quantity; //add quantity set in drawer
 		//add product to list of elements to add to diary or fridge
 		setSelection((prevSelection) => [...prevSelection, fullProduct]);
 	};
@@ -289,11 +306,19 @@ const IngredientSearchResult = ({ ingredient, inDrawer = false }) => {
 
 					{inDrawer && (
 						<div className="bg-white rounded-sm border-2 inline-flex items-center h-fit my-auto mr-2">
-							<button onClick={decrementQuantity} className="btn btn-xs bg-gray-700">
+							<button
+								onClick={decrementQuantity}
+								className="btn btn-xs bg-gray-700"
+							>
 								<Minus size={16} />
 							</button>
-							<span className="w-[48px] inline-block text-center px-2 text-primary font-bold ">{quantity}</span>
-							<button onClick={incrementQuantity} className="btn btn-xs bg-gray-700">
+							<span className="w-[48px] inline-block text-center px-2 text-primary font-bold ">
+								{quantity}
+							</span>
+							<button
+								onClick={incrementQuantity}
+								className="btn btn-xs bg-gray-700"
+							>
 								<Plus size={16} />
 							</button>
 						</div>

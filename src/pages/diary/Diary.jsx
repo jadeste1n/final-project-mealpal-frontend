@@ -106,9 +106,10 @@ const Diary = () => {
 
 	return (
 		<div className="space-y-4 pb-32 ">
-			<div className="flex flex-row justify-center items-center content-center gap-2 mb-8">
+			<h1 className="text-xl font-semibold mb-4">Your Diary</h1>
+			<div className="flex flex-row justify-center items-center content-center gap-2 mb-8 justify-items-stretch">
 				{/* DaisyUI Dropdown Implementation */}
-				<div className="dropdown">
+				<div className="dropdown w-100">
 					<div className="flex flex-row">
 						<ChevronLeft
 							aria-label="Previous"
@@ -117,7 +118,7 @@ const Diary = () => {
 							size={24}
 						/>
 						<button
-							className="input w-100 text-center flex font-bold justify-center items-center bg-primary border-0 text-white"
+							className="input w-full text-center flex font-bold justify-center items-center bg-primary border-0 text-white"
 							id="cally1"
 							data-dropdown-toggle="cally-popover1"
 						>
