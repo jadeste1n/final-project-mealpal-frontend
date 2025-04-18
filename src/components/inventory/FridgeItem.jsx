@@ -2,6 +2,7 @@ import { useId } from "react";
 import { useState } from "react";
 import { Star, MoreHorizontal, X, Trash, ArrowRight, Eye } from "lucide-react";
 import EnergySummaryChart from "./EnergySummaryChart";
+import { toast } from "react-toastify";
 
 const FridgeItem = ({
   name,
@@ -47,7 +48,10 @@ const FridgeItem = ({
 
       setShowMealSelect(false);
       setSelectedMeal("");
-      alert("Item added to diary ✅");
+
+      onDelete(true);
+
+      toast.success("Item added to diary and removed from fridge");
     } catch (err) {
       console.error("Add to diary failed:", err);
       alert("Something went wrong.");
