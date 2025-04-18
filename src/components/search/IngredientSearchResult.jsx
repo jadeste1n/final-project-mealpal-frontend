@@ -51,68 +51,17 @@ const IngredientSearchResult = ({ ingredient, inDrawer = false }) => {
 		(item) => (item._id || item.id || item.data.id) === ingredientId
 	);
 
-	/*
-	const isInSelection = selection.some((item) => {//check selection array
-		const possibleItemIds = [
-			item?.id,
-			item?.data?.id,
-			item?._id
-		];
-
-		const possibleIngredientIds = [
-			ingredientId,
-			ingredient.data?.id,
-		]
-	
-		const selected = possibleItemIds.some((id) => possibleIngredientIds.includes(id));; //check if mentioned id formats in selection match any of ids in ingredient object
-		return selected
-	});*/
-
-	/*const isInSelection = selection.some((item) => {
-		// Ingredient from Search: has `id`
-		if (ingredient?.id ) {
-			return (
-				item?.id === ingredient.id ||
-				item?.data?.id === ingredient.id
-			);
-		}
-	
-		// Ingredient from Favorites: has `data.id`
-		if (ingredient?.data?.id) {
-			return (
-				item?.id === ingredient.data.id ||
-				item?.data?.id === ingredient.data.id
-			);
-		}
-	
-		// Ingredient from Fridge: has `_id`
-		if (ingredient?._id) {
-			return item?._id === ingredient._id;
-		}
-	
-		return false; // fallback
-	});*/
-
-	//check if item is in favorites db
-	/*
-	const isFavorite = favorites.some(
-		(favorite) => (favorite._id || favorite.id) === ingredientId //food db = id & mealPal db = _id
-	);*/
+	//check if ingredient is within favorites backend
 	const isFavorite = favorites.some((fav) => {
-		//Ids to check against:
-			//Search results use id
-			//Fridge use _id or referenceId
-			//Favorites use _id and data.referenceId
-		const favId = fav._id;
-		const favRefId = fav.data?.referenceId;
+		const favRefId = fav.data?.referenceId; //check original food id in favorites against...
+		const ingredientRefId =
+			ingredient.referenceId || //data from fridge
+			ingredient.data?.referenceId || //data within favorites
+			ingredient.id; //data from search
 
-		const ingId =
-			ingredient._id ||
-			ingredient.id ||
-			ingredient.data?.id ||
-			ingredient.referenceId;
+		if (!favRefId || !ingredientRefId) return false;
 
-		return favId === ingId || favRefId === ingId;
+		return String(favRefId) === String(ingredientRefId);
 	});
 
 	//--------------------EFFECTS
@@ -219,15 +168,48 @@ const IngredientSearchResult = ({ ingredient, inDrawer = false }) => {
 	// Remove ingredient from favorites
 	const handleRemoveFromFavorites = async () => {
 		try {
-			const res = await fetch(`${backendUrl}/favorites/items/${ingredientId}`, {
-				method: "DELETE",
-				credentials: "include", // Sends the credentials (cookies or session info)
-			});
+			let favoriteIdToRemove;
+
+			if (isFavoriteItem) {
+				// Coming directly from favorites
+				favoriteIdToRemove = ingredient._id;
+			} else {
+				// Coming from fridge or search
+				const ingredientRefId = String(
+					ingredient.referenceId ||
+						ingredient.data?.referenceId ||
+						ingredient.id
+				);
+
+				const matchingFavorite = favorites.find(
+					(fav) => String(fav.data?.referenceId) === ingredientRefId
+				);
+
+				if (!matchingFavorite?._id) {
+					console.warn("Favorite not found for removal");
+					console.log("IngredientRefId:", ingredientRefId);
+					console.log("Favorites:", favorites);
+					return;
+				}
+
+				favoriteIdToRemove = matchingFavorite._id;
+			}
+
+			console.log("Deleting favorite with ID:", favoriteIdToRemove);
+
+			const res = await fetch(
+				`${backendUrl}/favorites/items/${favoriteIdToRemove}`,
+				{
+					method: "DELETE",
+					credentials: "include",
+				}
+			);
 
 			if (!res.ok) {
 				throw new Error("Failed to remove from favorites");
 			}
-			fetchFavorites(); // Trigger a fetch to update the favorites list in context
+
+			fetchFavorites();
 		} catch (error) {
 			console.error("Error removing ingredient from favorites:", error.message);
 		}
