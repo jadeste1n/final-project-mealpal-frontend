@@ -5,7 +5,7 @@ const IngredientDetail = ({ ingredient }) => {
 	return (
 		<div className="p-4">
 			<h3 className="text-lg font-bold">{name}</h3>
-			<p className="text-sm text-gray-500">{brand}</p>
+			<p className="text-sm text-gray-400">{brand}</p>
 
 			<p className="text-xs text-gray-500 mt-4">
 				Nutritional Data for 1 Quantity: <span className="font-bold">100 g / 100 ml</span>

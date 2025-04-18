@@ -1,14 +1,9 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { AppContext } from "../../App";
 import { Minus, Plus } from "lucide-react";
 
-const EntryDetail = (item ) => {
-	// Safeguard: Check if item is undefined or null
-	if (!item) {
-		return <div>No Item Id given</div>; // You can display a loading state or a fallback UI
-	}
-
-	const {_id, item: product } = item || {}; // item.item = product
+const EntryDetail = ({ item }) => {
+	const { _id, item: product, meal } = item || {}; // item.item = product
 	const {
 		name,
 		brand,
@@ -18,8 +13,10 @@ const EntryDetail = (item ) => {
 		ingredients = [],
 		instructions = [],
 	} = product || {}; //set ingredients to default empty to use variable
-	const { setEntries } = useContext(AppContext);
+	const { setEntries, backendUrl } = useContext(AppContext);
 	const [productQuantity, setProductQuantity] = useState(quantity || 1);
+	const [mealCategory, setMealCategory] = useState(meal || "uncategorized");
+	console.log(item);
 
 	//Adjust Quantity Buttons
 	const incrementQuantity = () => setProductQuantity((q) => q + 1);
@@ -34,21 +31,84 @@ const EntryDetail = (item ) => {
 					return {
 						...entry,
 						item: { ...entry.item, quantity: productQuantity },
+						meal: mealCategory,
 					};
 				}
 				return entry;
 			})
 		);
-	}, [productQuantity, product, _id, setEntries]);
+	}, [productQuantity, mealCategory, product, _id, setEntries]);
+
+	//change quantity & meal in backend
+	const firstRun = useRef(true); // 🧠 this tracks if it's the first effect run
+
+	useEffect(() => {
+		if (firstRun.current) {
+			firstRun.current = false; // ✅ skip first run
+			return;
+		}
+
+		const updateEntry = async () => {
+			try {
+				const res = await fetch(`${backendUrl}/diary/${_id}`, {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					credentials: "include",
+					body: JSON.stringify({
+						item: { ...product, quantity: productQuantity },
+						meal: mealCategory,
+					}),
+				});
+
+				if (!res.ok) {
+					console.error("Failed to update entry in backend:", res.status);
+				}
+				console.log("Updated entry in backend:", {
+					item: { ...product, quantity: productQuantity },
+					meal: mealCategory,
+				});
+			} catch (err) {
+				console.error("Error updating entry:", err);
+			}
+		};
+
+		updateEntry();
+	}, [productQuantity, mealCategory, backendUrl, _id, product]);
+
+	// Safeguard: Check if item is undefined or null
+	if (!item) {
+		return <div>No Item Id given</div>; // You can display a loading state or a fallback UI
+	}
 
 	return (
 		<div className="p-4">
-			<h3 className="text-lg font-bold">{name}</h3>
-			<p className="text-sm text-gray-500">{brand}</p>
-
+			<div className="mb-6">
+				<h3 className="text-lg font-bold">{name}</h3>
+				<p className="text-sm text-gray-400">{brand}</p>
+			</div>
+			<div className="mb-4 w-100">
+				<h4 className="text-sm mb-2">Meal Category</h4>
+				<select
+					value={mealCategory}
+					className="select"
+					onChange={(e) => setMealCategory(e.target.value)}
+				>
+					<option>uncategorised</option>
+					<option>Breakfast</option>
+					<option>Lunch</option>
+					<option>Dinner</option>
+					<option>Snack</option>
+				</select>
+			</div>
 			{!ingredients.length && (
 				<>
-					<div className="bg-white rounded-sm border-2 inline-flex items-center h-fit my-auto mr-2">
+					<h4 className="text-sm">Quantity</h4>
+					<p className="text-xs text-gray-500 mb-4">
+						1 Quantity equals 100g/100ml
+					</p>
+					<div className="bg-white rounded-sm border-2 inline-flex items-center h-fit my-auto mr-2 mb-4">
 						<button
 							onClick={decrementQuantity}
 							className="btn btn-xs bg-gray-700"
@@ -65,9 +125,6 @@ const EntryDetail = (item ) => {
 							<Plus size={16} />
 						</button>
 					</div>
-					<p className="text-xs text-gray-500 mt-4">
-						1 Quantity equals 100g/100ml
-					</p>
 				</>
 			)}
 			<p className="text-xs text-gray-500 mt-4">
