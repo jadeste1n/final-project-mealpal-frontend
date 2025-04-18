@@ -1,40 +1,76 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import FridgeItem from "../../components/inventory/FridgeItem"; // Adjust the path as needed
 import { getFridgeItems, deleteFridgeItem } from "@/data";
+import {
+  addFavorite,
+  getFavorites,
+  removeFavoritesByReferenceId,
+} from "@/data";
 
 const InventoryOverview = () => {
   const [items, setItems] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);
 
   useEffect(() => {
-    const fetchFridgeItems = async () => {
+    const fetchFridgeItemsWithFavorites = async () => {
       try {
-        const data = await getFridgeItems();
-        setItems(data);
+        const [fridgeItems, favorites] = await Promise.all([
+          getFridgeItems(),
+          getFavorites("product"),
+        ]);
+
+        const favoriteIds = new Set(
+          favorites.map((fav) => String(fav.data.referenceId))
+        );
+
+        const enrichedItems = fridgeItems.map((item) => ({
+          ...item,
+          isFavorite: favoriteIds.has(String(item.referenceId)),
+        }));
+
+        setItems(enrichedItems);
       } catch (err) {
-        console.error("Error fetching fridge items:", err);
+        console.error("Error fetching fridge items or favorites:", err);
       }
     };
 
-    fetchFridgeItems();
+    fetchFridgeItemsWithFavorites();
   }, []);
 
-  const handleToggleFavorite = async (itemId, currentFavoriteState) => {
+  const handleToggleFavorite = async (item, currentFavoriteState) => {
     try {
-      await axios.patch(
-        `${import.meta.env.VITE_APP_MEALPAL_API_URL}/fridge/items/${itemId}`,
-        { isFavorite: !currentFavoriteState },
-        { withCredentials: true }
-      );
-      // Optimistically update UI
-      setItems((prev) =>
-        prev.map((item) =>
-          item._id === itemId ? { ...item, isFavorite: !item.isFavorite } : item
-        )
-      );
+      if (!currentFavoriteState) {
+        await addFavorite(item);
+        setItems((prev) =>
+          prev.map((i) => (i._id === item._id ? { ...i, isFavorite: true } : i))
+        );
+      } else {
+        const favorites = await getFavorites("product");
+
+        const match = favorites.find(
+          (fav) =>
+            fav?.type === "product" &&
+            String(fav?.data?.referenceId) === String(item.referenceId)
+        );
+
+        if (!match) {
+          console.warn("⚠️ Favorite not found for removal");
+          return;
+        }
+
+        await removeFavoritesByReferenceId(item.referenceId, "product");
+
+        setItems((prev) =>
+          prev.map((i) =>
+            i._id === item._id ? { ...i, isFavorite: false } : i
+          )
+        );
+      }
     } catch (err) {
-      console.error("Error updating favorite:", err);
+      console.error(
+        "❌ Error toggling favorite:",
+        err.response?.data || err.message
+      );
     }
   };
 
@@ -65,9 +101,7 @@ const InventoryOverview = () => {
             name={item.name}
             nutrition={item.nutrition}
             isFavorite={item.isFavorite}
-            onToggleFavorite={() =>
-              handleToggleFavorite(item._id, item.isFavorite)
-            }
+            onToggleFavorite={() => handleToggleFavorite(item, item.isFavorite)}
             onOpenMenu={() => handleOpenMenu(item._id)}
             onDelete={() => handleDeleteItem(item._id)}
           />

@@ -86,7 +86,7 @@ export const toggleFavorite = async (itemId, isFavorite) => {
 /**
  * Get all favorite fridge items
  */
-export const getFavorites = async () => {
+export const getFridgeFavorites = async () => {
   const res = await fetch(`${API_URL}/fridge/favorites`, {
     credentials: 'include',
   });
