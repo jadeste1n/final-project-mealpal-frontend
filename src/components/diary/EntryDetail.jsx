@@ -15,7 +15,7 @@ const EntryDetail = ({ item }) => {
 	} = product || {}; //set ingredients to default empty to use variable
 	const { setEntries, backendUrl } = useContext(AppContext);
 	const [productQuantity, setProductQuantity] = useState(quantity || 1);
-	const [mealCategory, setMealCategory] = useState(meal || "uncategorized");
+	const [mealCategory, setMealCategory] = useState(meal || "uncategorised");
 	console.log(item);
 
 	//Adjust Quantity Buttons
