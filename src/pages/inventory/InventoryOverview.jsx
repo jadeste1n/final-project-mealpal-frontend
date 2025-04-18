@@ -6,10 +6,10 @@ import {
   getFavorites,
   removeFavoritesByReferenceId,
 } from "@/data";
+import { toast } from "react-toastify";
 
 const InventoryOverview = () => {
   const [items, setItems] = useState([]);
-  const [toastMessage, setToastMessage] = useState(null);
 
   useEffect(() => {
     const fetchFridgeItemsWithFavorites = async () => {
@@ -79,23 +79,22 @@ const InventoryOverview = () => {
     // Here you could open a modal or dropdown, depending on your design
   };
 
-  const handleDeleteItem = async (itemId) => {
+  const handleDeleteItem = async (itemId, suppressToast = false) => {
     try {
-      await deleteFridgeItem(itemId); // from your fridgeService.js
+      await deleteFridgeItem(itemId);
       setItems((prev) => prev.filter((item) => item._id !== itemId));
-      setToastMessage("Item deleted successfully.");
-      setTimeout(() => setToastMessage(null), 3000);
+
+      if (!suppressToast) {
+        toast.success("Item deleted successfully.");
+      }
     } catch (err) {
-      console.error("Delete failed:", err);
-      setToastMessage("Error deleting item.");
-      setTimeout(() => setToastMessage(null), 3000);
+      toast.error("Error deleting item.");
     }
   };
 
   return (
     <>
-
-    <h1 className="text-xl font-semibold mb-4">Your Fridge</h1>
+      <h1 className="text-xl font-semibold mb-4">Your Fridge</h1>
       <div>
         {items.map((item) => (
           <FridgeItem
@@ -105,19 +104,12 @@ const InventoryOverview = () => {
             isFavorite={item.isFavorite}
             onToggleFavorite={() => handleToggleFavorite(item, item.isFavorite)}
             onOpenMenu={() => handleOpenMenu(item._id)}
-            onDelete={() => handleDeleteItem(item._id)}
+            onDelete={(suppressToast) =>
+              handleDeleteItem(item._id, suppressToast)
+            }
           />
         ))}
       </div>
-
-      {/* ✅ Toast goes here, outside the item map */}
-      {toastMessage && (
-        <div className="toast toast-start z-[9999] fixed bottom-4 left-4">
-          <div className="alert alert-success">
-            <span>{toastMessage}</span>
-          </div>
-        </div>
-      )}
     </>
   );
 };
