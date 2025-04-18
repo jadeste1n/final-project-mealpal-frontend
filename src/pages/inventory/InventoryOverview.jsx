@@ -94,6 +94,7 @@ const InventoryOverview = () => {
 
   return (
     <>
+      <h2 className="text-xl font-semibold">Inventory</h2>
       <div>
         {items.map((item) => (
           <FridgeItem
