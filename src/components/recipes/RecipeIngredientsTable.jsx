@@ -5,18 +5,18 @@ const RecipeIngredientsTable = ({ ingredients, servings, onIncrease, onDecrease 
   return (
     <div className="bg-white rounded-md p-4 shadow">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">Ingredients</h3>
+        <h3 className="text-sm text-gray-700 font-semibold">Ingredients</h3>
         <div className="flex items-center gap-2">
           <button
             onClick={onDecrease}
-            className="bg-gray-200 p-1 rounded hover:bg-gray-300"
+            className="bg-gray-700 p-1 rounded hover:bg-gray-400"
           >
             <Minus className="w-4 h-4" />
           </button>
-          <span className="text-sm">{servings} servings</span>
+          <span className="text-sm text-gray-500">{servings} servings</span>
           <button
             onClick={onIncrease}
-            className="bg-gray-200 p-1 rounded hover:bg-gray-300"
+            className="bg-gray-700 p-1 rounded hover:bg-gray-300"
           >
             <Plus className="w-4 h-4" />
           </button>

@@ -1,9 +1,11 @@
-
 import React, {useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from "../../utils/axiosInstance";
-import {  ArrowLeft,CookingPot,NotebookPen,BookmarkPlus, Plus,Minus} from 'lucide-react';
+import {  ArrowLeft,CookingPot,NotebookPen,BookmarkPlus} from 'lucide-react';
 import RecipeIngredientsTable from '../../components/recipes/RecipeIngredientsTable';
+import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
+import RecipeFabMenu from '../../components/recipes/RecipeFabMenu';
 
 
 //import { useAuth } from '/Users/ankitbansal/Downloads/mealpal-frontend-main/src/context/index.js';
@@ -11,107 +13,106 @@ import RecipeIngredientsTable from '../../components/recipes/RecipeIngredientsTa
 const RecipeDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  //const  user  = useAuth();
-  //const userId = user?._id;
-  const userId = "67fbf2fe846c53686b5c6ffa"; // FOR TESTING THE PAGES I HAVE USED THIS
   const { recipe } = location.state || {};
-
   const [servings, setServings] = useState(recipe?.servings || 2);
 
   if (!recipe) {
     return (
       <div className="p-4 text-center">
-        <p>No recipe selected.</p>
+        <p className="text-white">No recipe selected.</p>
         <button
           className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="inline-block w-4 h-4 mr-1" /> Go Back
         </button>
+        <RecipeFabMenu />
       </div>
     );
   }
 
-  const scaledIngredients = recipe.ingredients.map((ing) => ({
-    name: ing.name || ing,
-    amount: `${((ing.amount || 1) / recipe.servings * servings).toFixed(1)} ${ing.unit || ''}`
-  }));
+  const scaledIngredients = (recipe.ingredients || [])
+    .filter(i => i && (typeof i === 'string' || typeof i === 'object'))
+    .map((ing) => ({
+      name: typeof ing === 'string' ? ing : ing.name || 'Unknown ingredient',
+      amount: typeof ing === 'string'
+        ? ''
+        : `${((ing.amount || 1) / recipe.servings * servings).toFixed(1)} ${ing.unit || ''}`
+    }));
 
   const handleUseRecipe = async () => {
     try {
-      await api.post("/recipes/use", {
-        userId,
+      await api.post('/recipes/use', {
         usedIngredients: recipe.ingredients.map(i => ({ name: i.name || i }))
-
       });
-      alert("Ingredients deducted from fridge!");
+      toast.success('Ingredients deducted from fridge!');
     } catch (err) {
-      console.error("Error using recipe:", err);
-      alert("Failed to deduct ingredients.");
+      console.error('Error using recipe:', err);
+      toast.error('Failed to deduct ingredients.');
     }
   };
 
   const handleAddToDiary = async () => {
     try {
-      await api.post(`/diary/${userId}/recipes`, {
-        
+      await api.post('/diary/recipes', {
         date: new Date().toISOString().slice(0, 10),
-
         meal: 'dinner',
-        item: {
-          name: recipe.title,
-          quantity: 1,
+        recipe: {
+          title: recipe.title,
           nutrition: {
-            calories: recipe.nutrition.calories || 0,
-            protein: recipe.nutrition.protein || 0,
-            carbs: recipe.nutrition.carbs || 0,
-            fat: recipe.nutrition.fat || 0
-          },
-          source: 'recipe'
+            calories: recipe.nutrition?.calories || 0,
+            protein: recipe.nutrition?.protein || 0,
+            carbs: recipe.nutrition?.carbs || 0,
+            fat: recipe.nutrition?.fat || 0
+          }
         }
-
       });
-      alert("Recipe logged to diary!");
+      toast.success('Recipe logged to diary!');
     } catch (err) {
-      console.error("Error logging recipe:", err);
-      alert("Failed to log to diary.");
+      console.error('Error logging recipe:', err);
+      toast.error('Failed to log to diary.');
     }
   };
 
   const handleSaveFavorite = async () => {
     try {
-      await api.post(`/favorites/${userId}`, {
-        type: "recipe",
+      await api.post('/favorites/items', {
+        type: 'recipe',
         data: {
-          id: recipe.id,
+          referenceId: recipe.id,
           name: recipe.title,
-          image: recipe.image,
+          image: recipe.image || '/images/placeholder.jpg',
           nutrition: recipe.nutrition,
-          source: "spoonacular",
-        },
+          source: 'spoonacular',
+          ingredients: recipe.ingredients.map(i =>
+            typeof i === 'string' ? i : `${i.name} ${i.amount || ''}`.trim()
+          ),
+          instructions: recipe.instructions
+        }
       });
-      alert("Recipe saved to favorites!");
+      toast.success('Recipe saved to favorites!');
     } catch (err) {
-      console.error("Error saving favorite:", err);
-      alert("Failed to save favorite.");
+      console.error('Error saving favorite:', err);
+      toast.error('Failed to save favorite.');
     }
   };
 
   return (
-    <div className="p-4">
+    <motion.div
+      className="p-4 max-w-3xl mx-auto pb-10"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <button
         onClick={() => navigate(-1)}
-        className="text-sm text-blue-600 mb-4 inline-flex items-center"
+        className="text-sm text-blue-400 mb-4 inline-flex items-center hover:text-white"
       >
         <ArrowLeft className="w-4 h-4 mr-1" /> Back
       </button>
 
-      <h1 className="text-2xl font-bold mb-2">{recipe.title}</h1>
-      <img
-        src={recipe.image}
-        alt={recipe.title}
-        className="w-full rounded mb-4"
-      />
+      <h1 className="text-2xl font-bold text-white mb-2">{recipe.title}</h1>
+      <img src={recipe.image || '/images/placeholder.jpg'} alt={recipe.title} className="w-full rounded-xl mb-6 shadow-md object-cover h-64" />
 
       <RecipeIngredientsTable
         ingredients={scaledIngredients}
@@ -120,42 +121,44 @@ const RecipeDetails = () => {
         onDecrease={() => setServings((s) => Math.max(1, s - 1))}
       />
 
-      <div className="mt-6 mb-4">
-        <h2 className="text-lg font-semibold mb-2">Instructions</h2>
-        <ol className="list-decimal list-inside text-sm text-gray-700">
+      <div className="mt-8 mb-6">
+        <h2 className="text-lg font-semibold text-white mb-2">Instructions</h2>
+        <ol className="list-decimal list-inside text-sm text-gray-300 space-y-2">
           {recipe.instructions.map((step, idx) => (
             <li key={idx}>{step}</li>
           ))}
         </ol>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <button
+      <div className="flex flex-col gap-3">
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          whileHover={{ scale: 1.03 }}
           onClick={handleUseRecipe}
-
-          className="bg-gray-600 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
-
+          className="bg-emerald-600 text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2"
         >
-          <CookingPot className="w-4 h-4" /> Use Recipe
-        </button>
-        <button
+          <CookingPot className="w-5 h-5" /> Use Recipe
+        </motion.button>
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          whileHover={{ scale: 1.03 }}
           onClick={handleAddToDiary}
-
-          className="bg-gray-500 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
-
+          className="bg-yellow-500 text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2"
         >
-          <NotebookPen className="w-4 h-4" /> Add to Diary
-        </button>
-        <button
+          <NotebookPen className="w-5 h-5" /> Add to Diary
+        </motion.button>
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          whileHover={{ scale: 1.03 }}
           onClick={handleSaveFavorite}
-
-          className="bg-gray-500 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
-
+          className="bg-pink-500 text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2"
         >
-          <BookmarkPlus className="w-4 h-4" /> Save to Favorites
-        </button>
+          <BookmarkPlus className="w-5 h-5" /> Save to Favorites
+        </motion.button>
       </div>
-    </div>
+
+      <RecipeFabMenu />
+    </motion.div>
   );
 };
 

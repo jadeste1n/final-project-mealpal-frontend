@@ -18,6 +18,7 @@
     "axios": "^1.8.4",
     "cally": "^0.8.0",
     "lucide-react": "^0.487.0",
+    "motion": "^12.7.4",
     "npm": "^11.3.0",
     "react": "^19.0.0",
     "react-circular-progressbar": "^2.2.0",

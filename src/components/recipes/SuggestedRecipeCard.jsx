@@ -1,27 +1,39 @@
 import React from 'react';
-import { Bookmark, ChefHat, Clock, BarChart3, UtensilsCrossed } from 'lucide-react';
+import { Bookmark, ChefHat, Clock, BarChart3, UtensilsCrossed, Eye } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const SuggestedRecipeCard = ({ recipe, onSelect, onSave }) => {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden relative">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-xl mx-auto"
+    >
       <div className="relative">
         <img
-          src={recipe.image} alt={recipe.title} className="w-full h-56 object-cover" onClick={onSelect}
+          src={recipe.image}
+          alt={recipe.title}
+          className="w-full h-64 object-cover object-center"
+          loading="lazy"
         />
         <button
-          onClick={onSave} className="absolute top-3 right-3 bg-white/80 backdrop-blur-sm rounded-full p-2 hover:bg-white"
+          onClick={onSave}
+          className="absolute top-3 right-3 bg-white text-gray-800 hover:text-pink-500 rounded-full p-2 shadow-md transition"
         >
-          <Bookmark className="w-5 h-5 text-gray-700" />
+          <Bookmark className="w-5 h-5" />
         </button>
       </div>
 
-      <div className="p-4">
-        <h2 className="text-lg font-bold text-center mb-1 flex justify-center items-center gap-1">
-          <ChefHat className="w-5 h-5" /> Suggested Recipe
+      <div className="p-5">
+        <h2 className="text-xl font-semibold text-gray-800 flex items-center justify-center gap-2 mb-1">
+          <ChefHat className="w-5 h-5 text-green-600" /> Suggested Recipe
         </h2>
-        <p className="text-sm text-gray-500 text-center mb-4">We have Cooked up a Match for You!</p>
+        <p className="text-sm text-gray-500 text-center mb-4">
+          We have cooked up something based on your preferences !!
+        </p>
 
-        <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-600 mb-3">
+        <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-600 mb-4">
           <span className="flex items-center gap-1">
             <Clock className="w-4 h-4" /> {recipe.readyInMinutes || 30} min
           </span>
@@ -34,16 +46,23 @@ const SuggestedRecipeCard = ({ recipe, onSelect, onSave }) => {
         </div>
 
         <div className="text-center">
-          <h3 className="text-md font-semibold mb-1">{recipe.title}</h3>
-          <p className="text-sm text-gray-500 line-clamp-2">
-            {recipe.description || 'This is a short recipe description that gives a short info about the recipe.'}
+          <h3 className="text-lg font-bold text-gray-800 mb-1">{recipe.title}</h3>
+          <p className="text-sm text-gray-600 line-clamp-2">
+            {recipe.description || 'A delicious meal crafted just for you based on your selected criteria.'}
           </p>
         </div>
+
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.03 }}
+          onClick={onSelect}
+          className="mt-5 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-xl flex items-center justify-center gap-2 transition"
+        >
+          <Eye className="w-4 h-4" /> View Full Recipe
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
 export default SuggestedRecipeCard;
-
-// This component displays a suggested recipe card with an image, title, description, and cooking time.

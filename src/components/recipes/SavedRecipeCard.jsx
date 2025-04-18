@@ -1,58 +1,54 @@
 import React from 'react';
-import { Bookmark, ChefHat, Clock, BarChart3, UtensilsCrossed } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Clock, ChefHat, XCircle } from 'lucide-react';
 
+const SavedRecipeCard = ({ recipe, favoriteId, onRemove }) => {
+  const navigate = useNavigate();
 
-const SuggestedRecipeCard = ({ recipe, onSelect, onSave }) => {
+  if (!recipe || typeof recipe !== 'object') return null;
+
+  const handleClick = () => {
+    navigate('/recipes/details', { state: { recipe } });
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden relative">
-      <div className="relative">
+    <div
+      className="bg-white rounded-xl shadow-md hover:shadow-lg transition overflow-hidden cursor-pointer relative"
+    >
+      {recipe.image && (
         <img
           src={recipe.image}
-          alt={recipe.title}
-          className="w-full h-56 object-cover"
+          alt={recipe.title || 'Recipe'}
+          className="w-full h-36 object-cover object-center"
+          onClick={handleClick}
         />
-        <button
-          onClick={onSave}
-          className="absolute top-3 right-3 bg-white/80 backdrop-blur-sm rounded-full p-2 hover:bg-white"
-        >
-          <Bookmark className="w-5 h-5 text-gray-700" />
-        </button>
-      </div>
+      )}
 
-      <div className="p-4">
-        <h2 className="text-lg font-bold text-center mb-1 flex justify-center items-center gap-1">
-          <ChefHat className="w-5 h-5" /> Suggested Recipe
-        </h2>
-        <p className="text-sm text-gray-500 text-center mb-4">We’ve Cooked up a Match for You!</p>
-
-        <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-600 mb-3">
+      <div className="p-3" onClick={handleClick}>
+        <h3 className="text-md font-semibold text-gray-800 mb-1 truncate">
+          {recipe?.name || recipe?.title || 'Untitled Recipe'}
+        </h3>
+        <div className="flex gap-3 text-xs text-gray-500">
           <span className="flex items-center gap-1">
             <Clock className="w-4 h-4" /> {recipe.readyInMinutes || 30} min
           </span>
           <span className="flex items-center gap-1">
-            <BarChart3 className="w-4 h-4" /> Medium
-          </span>
-          <span className="flex items-center gap-1">
-            <UtensilsCrossed className="w-4 h-4" /> {recipe.mealType || 'Dinner'}
+            <ChefHat className="w-4 h-4" /> Recipe
           </span>
         </div>
-
-        <div className="text-center">
-          <h3 className="text-md font-semibold mb-1">{recipe.title}</h3>
-          <p className="text-sm text-gray-500 line-clamp-2">
-            {recipe.description || 'This is a short recipe description that gives a short info about the recipe.'}
-          </p>
-        </div>
-
-        <button
-          onClick={onSelect}
-          className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-        >
-          View Full Recipe
-        </button>
       </div>
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove?.(favoriteId);
+        }}
+        className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full shadow"
+      >
+        <XCircle className="w-4 h-4" />
+      </button>
     </div>
   );
 };
 
-export default SuggestedRecipeCard;
+export default SavedRecipeCard;
