@@ -94,7 +94,7 @@ const InventoryOverview = () => {
 
   return (
     <>
-      <div className="p-4">
+      <div>
         {items.map((item) => (
           <FridgeItem
             key={item._id}
