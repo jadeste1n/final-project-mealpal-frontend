@@ -1,13 +1,14 @@
-import { Star, CirclePlus, CircleMinus, Eye } from "lucide-react";
+import { Star, CirclePlus, CircleMinus, Eye, Plus, Minus } from "lucide-react";
 import { useState, useEffect, useContext, use } from "react";
 import IngredientDetail from "./IngredientDetail";
 import { AppContext } from "../../App";
 
-const IngredientSearchResult = ({ ingredient }) => {
+const IngredientSearchResult = ({ ingredient, inDrawer = false }) => {
 	//--------------------VARIABLES
 	// takes ingredient from fetched data array
 	const { selection, setSelection, favorites, fetchFavorites, openModal } =
 		useContext(AppContext);
+	const [quantity, setQuantity] = useState(ingredient.quantity || 1);
 	const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 	// Check if item is coming from favorites
@@ -117,6 +118,20 @@ const IngredientSearchResult = ({ ingredient }) => {
 		}
 	};
 
+	// keep selection quantity in sync when in drawer
+	useEffect(() => {
+		if (!inDrawer || !isInSelection) return;
+		setSelection((prevSelection) =>
+			prevSelection.map((item) => {
+				const matchId = item._id || item.id || item.data?.id;
+				if (matchId === ingredientId) {
+					return { ...item, quantity };
+				}
+				return item;
+			})
+		);
+	}, [quantity]);
+
 	//--------------------BUTTON ACTIONS
 	const handleOpenDetails = async () => {
 		console.log("Opening modal...", ingredient); //DEBUG
@@ -220,6 +235,7 @@ const IngredientSearchResult = ({ ingredient }) => {
 			};
 		}
 
+		fullProduct.quantity = quantity;//add quantity set in drawer
 		//add product to list of elements to add to diary or fridge
 		setSelection((prevSelection) => [...prevSelection, fullProduct]);
 	};
@@ -231,47 +247,68 @@ const IngredientSearchResult = ({ ingredient }) => {
 		);
 	};
 
+	//Adjust Quantity Buttons
+	const incrementQuantity = () => setQuantity((q) => q + 1);
+	const decrementQuantity = () => setQuantity((q) => Math.max(1, q - 1));
+
 	//List Element
 	return (
 		<>
 			<li className="list-row flex flex-row justify-between">
 				<div className="flex flex-col justify-start content-start">
-					<p className="text-left">{ingredientName}</p>
+					<p className="text-left font-bold">{ingredientName}</p>
 					<p className="text-left">{ingredientBrand}</p>
 				</div>
-				<div>
-					<button
-						className="btn btn-square btn-ghost min-w-fit p-3
+				<div className="flex flex-row">
+					{!inDrawer && (
+						<>
+							<button
+								className="btn btn-square btn-ghost min-w-fit p-3 my-auto
 "
-						onClick={handleOpenDetails}
-					>
-						<Eye className="stroke-blue-600"/> {/* opens pop up with Ingredient Details */}
-					</button>
-					<button
-						className="btn btn-square btn-ghost min-w-fit p-3
+								onClick={handleOpenDetails}
+							>
+								<Eye className="stroke-blue-600" />{" "}
+								{/* opens pop up with Ingredient Details */}
+							</button>
+							<button
+								className="btn btn-square btn-ghost min-w-fit p-3 my-auto
 "
-						onClick={
-							isFavorite ? handleRemoveFromFavorites : handleAddToFavorites
-						}
-					>
-						{isFavorite ? (
-							<Star className="fill-yellow-500 text-yellow-500" />
-						) : (
-							<Star />
-						)}{" "}
-						{/* saves ingredient to favorites -> add to backend favorites POST */}
-					</button>
+								onClick={
+									isFavorite ? handleRemoveFromFavorites : handleAddToFavorites
+								}
+							>
+								{isFavorite ? (
+									<Star className="fill-yellow-500 text-yellow-500" />
+								) : (
+									<Star />
+								)}{" "}
+								{/* saves ingredient to favorites -> add to backend favorites POST */}
+							</button>
+						</>
+					)}
+
+					{inDrawer && (
+						<div className="bg-white rounded-sm border-2 inline-flex items-center h-fit my-auto mr-2">
+							<button onClick={decrementQuantity} className="btn btn-xs bg-gray-700">
+								<Minus size={16} />
+							</button>
+							<span className="w-[48px] inline-block text-center px-2 text-primary font-bold ">{quantity}</span>
+							<button onClick={incrementQuantity} className="btn btn-xs bg-gray-700">
+								<Plus size={16} />
+							</button>
+						</div>
+					)}
 
 					<button
-						className="btn btn-square btn-ghost min-w-fit pl-3"
+						className="btn btn-square btn-ghost min-w-fit pl-3 my-auto"
 						onClick={
 							isInSelection ? handleRemoveFromSelection : handleAddToSelection
 						}
 					>
 						{isInSelection ? (
-							<CircleMinus className="stroke-red-800" /> // Remove from selection
+							<CircleMinus className="stroke-red-800 " /> // Remove from selection
 						) : (
-							<CirclePlus className="stroke-green-600" /> // Add to selection
+							<CirclePlus className="stroke-green-600 " /> // Add to selection
 						)}
 					</button>
 				</div>

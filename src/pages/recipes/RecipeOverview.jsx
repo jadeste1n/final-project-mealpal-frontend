@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { api } from 'utils/axiosInstance.jsx';
-import SavedRecipeCard from 'src/components/recipes/SavedRecipeCard.jsx';
+import React, { useEffect, useState } from "react";
+import { api } from "@/utils/axiosInstance.jsx";
+import SavedRecipeCard from "@/components/recipes/SavedRecipeCard.jsx";
 //import { useAuth } from '/Users/ankitbansal/Downloads/mealpal-frontend-main/src/context/index.js';
-
-
 
 const RecipeOverview = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
-  //const  user  = useAuth(); 
+  //const  user  = useAuth();
   //const userId = user?._id;
-  const userId = '67fbf2fe846c53686b5c6ffa'; // FOR TESTING THE PAGES
+  const userId = "67fbf2fe846c53686b5c6ffa"; // FOR TESTING THE PAGES
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -19,7 +17,7 @@ const RecipeOverview = () => {
         const res = await api.get(`/favorites/${userId}?type=recipe`);
         setRecipes(res.data);
       } catch (err) {
-        console.error('Failed to fetch recipes:', err);
+        console.error("Failed to fetch recipes:", err);
       } finally {
         setLoading(false);
       }

@@ -1,17 +1,19 @@
+
 import React, {useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from 'utils/axiosInstance.jsx';
 import {  ArrowLeft,CookingPot,NotebookPen,BookmarkPlus, Plus,Minus} from 'lucide-react';
 import RecipeIngredientsTable from '../../components/recipes/RecipeIngredientsTable';
 
+
 //import { useAuth } from '/Users/ankitbansal/Downloads/mealpal-frontend-main/src/context/index.js';
 
 const RecipeDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  //const  user  = useAuth(); 
+  //const  user  = useAuth();
   //const userId = user?._id;
-  const userId = '67fbf2fe846c53686b5c6ffa'; // FOR TESTING THE PAGES I HAVE USED THIS 
+  const userId = "67fbf2fe846c53686b5c6ffa"; // FOR TESTING THE PAGES I HAVE USED THIS
   const { recipe } = location.state || {};
 
   const [servings, setServings] = useState(recipe?.servings || 2);
@@ -37,14 +39,15 @@ const RecipeDetails = () => {
 
   const handleUseRecipe = async () => {
     try {
-      await api.post('/recipes/use', {
+      await api.post("/recipes/use", {
         userId,
         usedIngredients: recipe.ingredients.map(i => ({ name: i.name || i }))
+
       });
-      alert('Ingredients deducted from fridge!');
+      alert("Ingredients deducted from fridge!");
     } catch (err) {
-      console.error('Error using recipe:', err);
-      alert('Failed to deduct ingredients.');
+      console.error("Error using recipe:", err);
+      alert("Failed to deduct ingredients.");
     }
   };
 
@@ -53,7 +56,8 @@ const RecipeDetails = () => {
       await api.post(`/diary/${userId}/recipes`, {
         
         date: new Date().toISOString().slice(0, 10),
-        meal: 'Dinner',
+
+        meal: 'dinner',
         item: {
           name: recipe.title,
           quantity: 1,
@@ -65,41 +69,49 @@ const RecipeDetails = () => {
           },
           source: 'recipe'
         }
+
       });
-      alert('Recipe logged to diary!');
+      alert("Recipe logged to diary!");
     } catch (err) {
-      console.error('Error logging recipe:', err);
-      alert('Failed to log to diary.');
+      console.error("Error logging recipe:", err);
+      alert("Failed to log to diary.");
     }
   };
 
   const handleSaveFavorite = async () => {
     try {
       await api.post(`/favorites/${userId}`, {
-        type: 'recipe',
+        type: "recipe",
         data: {
           id: recipe.id,
           name: recipe.title,
           image: recipe.image,
           nutrition: recipe.nutrition,
-          source: 'spoonacular'
-        }
+          source: "spoonacular",
+        },
       });
-      alert('Recipe saved to favorites!');
+      alert("Recipe saved to favorites!");
     } catch (err) {
-      console.error('Error saving favorite:', err);
-      alert('Failed to save favorite.');
+      console.error("Error saving favorite:", err);
+      alert("Failed to save favorite.");
     }
   };
 
   return (
     <div className="p-4">
-      <button onClick={() => navigate(-1)} className="text-sm text-blue-600 mb-4 inline-flex items-center">
+      <button
+        onClick={() => navigate(-1)}
+        className="text-sm text-blue-600 mb-4 inline-flex items-center"
+      >
         <ArrowLeft className="w-4 h-4 mr-1" /> Back
       </button>
 
       <h1 className="text-2xl font-bold mb-2">{recipe.title}</h1>
-      <img src={recipe.image} alt={recipe.title} className="w-full rounded mb-4" />
+      <img
+        src={recipe.image}
+        alt={recipe.title}
+        className="w-full rounded mb-4"
+      />
 
       <RecipeIngredientsTable
         ingredients={scaledIngredients}
@@ -120,19 +132,25 @@ const RecipeDetails = () => {
       <div className="flex flex-col gap-2">
         <button
           onClick={handleUseRecipe}
+
           className="bg-gray-600 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+
         >
           <CookingPot className="w-4 h-4" /> Use Recipe
         </button>
         <button
           onClick={handleAddToDiary}
+
           className="bg-gray-500 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+
         >
           <NotebookPen className="w-4 h-4" /> Add to Diary
         </button>
         <button
           onClick={handleSaveFavorite}
+
           className="bg-gray-500 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+
         >
           <BookmarkPlus className="w-4 h-4" /> Save to Favorites
         </button>

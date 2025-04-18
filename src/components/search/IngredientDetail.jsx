@@ -8,7 +8,7 @@ const IngredientDetail = ({ ingredient }) => {
 			<p className="text-sm text-gray-500">{brand}</p>
 
 			<p className="text-xs text-gray-500 mt-4">
-				Nutritional Data for <span className="font-bold">100 g / 100 ml</span>
+				Nutritional Data for 1 Quantity: <span className="font-bold">100 g / 100 ml</span>
 			</p>
 
 			<table className="mt-2 w-full text-sm border-collapse">

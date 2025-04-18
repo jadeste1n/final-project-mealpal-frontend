@@ -1,5 +1,5 @@
-import React from 'react';
-import RecipeCard from 'src/components/recipes/RecipeCard.jsx';
+import React from "react";
+import RecipeCard from "./RecipeCard.jsx";
 
 const RecipeGrid = ({ recipes, onSelect }) => {
   if (!recipes?.length) {
