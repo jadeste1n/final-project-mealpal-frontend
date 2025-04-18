@@ -9,7 +9,7 @@ import EnergySummaryChart from "../../components/inventory/EnergySummaryChart";
 
 const Diary = () => {
 	// variables ----------------
-	const { backendUrl , entries, setEntries, modalState, closeModal, content } =
+	const { backendUrl, entries, setEntries, modalState, closeModal, content } =
 		useContext(AppContext);
 	const [date, setDate] = useState(() => {
 		const today = new Date(); //set day to today
@@ -36,7 +36,7 @@ const Diary = () => {
 			if (!res.ok) throw new Error("Failed to fetch diary entries");
 			const data = await res.json();
 			setEntries(data || []);
-			console.log(data)
+			console.log(data);
 		} catch (err) {
 			console.error(err.message);
 		}
@@ -45,9 +45,10 @@ const Diary = () => {
 	// Utils ----------------
 	const groupEntriesByCategory = (entries, categories) => {
 		return categories.reduce((acc, category) => {
-			acc[category] = entries.filter(
-				(e) => (e.meal || "uncategorized") === category
-			);
+			acc[category] = entries.filter((e) => {
+				const meal = e.meal ? e.meal.toLowerCase() : "uncategorised";
+				return meal === category.toLowerCase();
+			});
 			return acc;
 		}, {});
 	};
