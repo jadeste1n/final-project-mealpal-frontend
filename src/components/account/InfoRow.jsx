@@ -4,7 +4,7 @@ const InfoRow = ({ label, field, value, onClick }) => {
   return (
     <div
       onClick={() => onClick(field)}
-      className="flex justify-between items-center bg-gray-100 dark:bg-gray-800 rounded-lg px-4 py-4 mb-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+      className="flex justify-between items-center bg-base-200 rounded-lg px-4 py-4 mb-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition"
     >
       <span className="text-base font-medium capitalize">{label}</span>
       <div className="flex items-center gap-2">

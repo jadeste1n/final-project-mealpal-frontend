@@ -31,11 +31,16 @@ const AccountSettings = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    document.documentElement.setAttribute(
-      "data-theme",
-      isDarkMode ? "dark" : "light"
-    );
-  }, [isDarkMode]);
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
+      setIsDarkMode(true);
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      setIsDarkMode(false);
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  }, []);
 
   const handleChangeModal = (field) => {
     switch (field) {
@@ -371,18 +376,28 @@ const AccountSettings = () => {
 
   return (
     <div className="max-w-xl mx-auto mt-10 space-y-6">
-      <h2 className="text-xl font-semibold">Profile</h2>
+      <div className="relative mb-6">
+        <h2 className="text-xl font-semibold text-center">Profile</h2>
 
-      <div className="flex justify-end">
-        <label className="cursor-pointer flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={isDarkMode}
-            onChange={() => setIsDarkMode(!isDarkMode)}
-            className="toggle"
-          />
-          {isDarkMode ? <Moon size={20} /> : <Sun size={20} />}
-        </label>
+        <div className="absolute right-0 top-1/2 -translate-y-1/2">
+          <label className="cursor-pointer flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={isDarkMode}
+              onChange={() => {
+                const newMode = !isDarkMode;
+                setIsDarkMode(newMode);
+                localStorage.setItem("theme", newMode ? "dark" : "light");
+                document.documentElement.setAttribute(
+                  "data-theme",
+                  newMode ? "dark" : "light"
+                );
+              }}
+              className="toggle"
+            />
+            {isDarkMode ? <Moon size={20} /> : <Sun size={20} />}
+          </label>
+        </div>
       </div>
 
       {/* Account section */}

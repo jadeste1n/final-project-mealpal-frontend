@@ -27,7 +27,7 @@ const EnergySummaryChart = ({ nutrition }) => {
           startAngle={270}
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-sm font-semibold pointer-events-none">
-          <div className="text-xl text-gray-800">
+          <div className="text-xl text-base-content">
             {Math.round(calories) || 0}
           </div>
           <div className="text-xs text-gray-500">kcal</div>
