@@ -15,7 +15,8 @@ const EntryDetail = ({ item }) => {
 	} = product || {}; //set ingredients to default empty to use variable
 	const { setEntries, backendUrl } = useContext(AppContext);
 	const [productQuantity, setProductQuantity] = useState(quantity || 1);
-	const [mealCategory, setMealCategory] = useState(meal || "uncategorised");
+	const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1).toLowerCase();
+const [mealCategory, setMealCategory] = useState(capitalize(meal) || "Uncategorised");
 	console.log(item);
 
 	//Adjust Quantity Buttons
