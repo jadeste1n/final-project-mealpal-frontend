@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Refrigerator, BookOpenCheck, Soup, User, Plus } from "lucide-react";
+import { Refrigerator, BookOpenCheck, Soup, User, Plus, Bookmark } from "lucide-react";
 
 const BottomNav = () => {
   const { pathname } = useLocation();
@@ -20,7 +20,7 @@ const BottomNav = () => {
         <Link
           to="/"
           className={`btn-ghost btn-sm rounded-btn ${
-            pathname === "/" ? "dock-active" : ""
+            pathname === "/" ? "dock-active  text-green-700" : ""
           }`}
         >
           <Refrigerator className="w-5 h-5" />
@@ -28,7 +28,7 @@ const BottomNav = () => {
         <Link
           to="/diary"
           className={`btn-ghost rounded-btn ${
-            pathname === "/diary" ? "dock-active" : ""
+            pathname === "/diary" ? "dock-active text-green-700" : ""
           }`}
         >
           <BookOpenCheck className="w-5 h-5" />
@@ -37,7 +37,7 @@ const BottomNav = () => {
         <Link
           to="/recipes/create"
           className={`btn-ghost rounded-btn ${
-            pathname === "/recipes/create" ? "dock-active" : ""
+            pathname === "/recipes/create" ? "dock-active  text-green-700" : ""
           }`}
         >
           <Soup className="w-5 h-5" />
@@ -45,19 +45,21 @@ const BottomNav = () => {
         <Link
           to="/recipes"
           className={`btn-ghost rounded-btn ${
-            pathname === "/recipes" ? "dock-active" : ""
+            pathname === "/recipes" ? "dock-active  text-green-700" : ""
           }`}
         >
-          <Soup className="w-5 h-5" />
+          <Bookmark className="w-5 h-5" />
         </Link>
+        {/*
         <Link
           to="/account"
           className={`btn-ghost rounded-btn ${
-            pathname === "/account" ? "dock-active" : ""
+            pathname === "/account" ? "dock-active text-green-700" : ""
           }`}
         >
           <User className="w-5 h-5" />
         </Link>
+        */}
       </div>
     </div>
   );
