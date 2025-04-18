@@ -106,6 +106,7 @@ const Diary = () => {
 
 	return (
 		<div className="space-y-4 pb-32 ">
+			<h1 className="text-xl font-semibold mb-4">Your Diary</h1>
 			<div className="flex flex-row justify-center items-center content-center gap-2 mb-8">
 				{/* DaisyUI Dropdown Implementation */}
 				<div className="dropdown">
