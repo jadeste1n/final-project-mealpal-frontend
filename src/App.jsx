@@ -2,6 +2,7 @@ import "./App.css";
 import { createContext, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
+import AppLayout from "./layouts/AppLayout.jsx";
 import RootLayout from "./layouts/RootLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 
@@ -123,8 +124,10 @@ function App() {
 
 
             {/* Public routes */}
-            <Route path="/signup" element={<Signup />} />
+			<Route element={<AppLayout />}>
+            <Route path="/register" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+			</Route>
           </Route>
         </Routes>
       </BrowserRouter>

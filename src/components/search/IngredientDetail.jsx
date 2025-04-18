@@ -2,6 +2,8 @@ const IngredientDetail = ({ ingredient }) => {
 	const ingredientData = ingredient?.data || ingredient;
 	const { name, brand, nutrition = {} } = ingredientData;
 
+	console.log(ingredient)
+
 	return (
 		<div className="p-4">
 			<h3 className="text-lg font-bold">{name}</h3>
