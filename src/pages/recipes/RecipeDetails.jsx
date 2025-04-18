@@ -1,14 +1,11 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { api } from "@/utils/axiosInstance.jsx";
-import {
-  ArrowLeft,
-  CookingPot,
-  NotebookPen,
-  BookmarkPlus,
-  Plus,
-  Minus,
-} from "lucide-react";
+
+import React, {useState} from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { api } from 'utils/axiosInstance.jsx';
+import {  ArrowLeft,CookingPot,NotebookPen,BookmarkPlus, Plus,Minus} from 'lucide-react';
+import RecipeIngredientsTable from '../../components/recipes/RecipeIngredientsTable';
+
+
 //import { useAuth } from '/Users/ankitbansal/Downloads/mealpal-frontend-main/src/context/index.js';
 
 const RecipeDetails = () => {
@@ -18,6 +15,8 @@ const RecipeDetails = () => {
   //const userId = user?._id;
   const userId = "67fbf2fe846c53686b5c6ffa"; // FOR TESTING THE PAGES I HAVE USED THIS
   const { recipe } = location.state || {};
+
+  const [servings, setServings] = useState(recipe?.servings || 2);
 
   if (!recipe) {
     return (
@@ -32,11 +31,18 @@ const RecipeDetails = () => {
       </div>
     );
   }
+
+  const scaledIngredients = recipe.ingredients.map((ing) => ({
+    name: ing.name || ing,
+    amount: `${((ing.amount || 1) / recipe.servings * servings).toFixed(1)} ${ing.unit || ''}`
+  }));
+
   const handleUseRecipe = async () => {
     try {
       await api.post("/recipes/use", {
         userId,
-        usedIngredients: recipe.ingredients.map((name) => ({ name })),
+        usedIngredients: recipe.ingredients.map(i => ({ name: i.name || i }))
+
       });
       alert("Ingredients deducted from fridge!");
     } catch (err) {
@@ -44,15 +50,26 @@ const RecipeDetails = () => {
       alert("Failed to deduct ingredients.");
     }
   };
+
   const handleAddToDiary = async () => {
     try {
-      await api.post(`/diary/${userId}/recipe`, {
+      await api.post(`/diary/${userId}/recipes`, {
+        
         date: new Date().toISOString().slice(0, 10),
-        meal: "dinner",
-        recipe: {
-          title: recipe.title,
-          nutrition: recipe.nutrition,
-        },
+
+        meal: 'dinner',
+        item: {
+          name: recipe.title,
+          quantity: 1,
+          nutrition: {
+            calories: recipe.nutrition.calories || 0,
+            protein: recipe.nutrition.protein || 0,
+            carbs: recipe.nutrition.carbs || 0,
+            fat: recipe.nutrition.fat || 0
+          },
+          source: 'recipe'
+        }
+
       });
       alert("Recipe logged to diary!");
     } catch (err) {
@@ -60,6 +77,7 @@ const RecipeDetails = () => {
       alert("Failed to log to diary.");
     }
   };
+
   const handleSaveFavorite = async () => {
     try {
       await api.post(`/favorites/${userId}`, {
@@ -95,18 +113,16 @@ const RecipeDetails = () => {
         className="w-full rounded mb-4"
       />
 
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">Ingredients</h2>
-        <ul className="list-disc list-inside">
-          {recipe.ingredients.map((ing, idx) => (
-            <li key={idx}>{ing}</li>
-          ))}
-        </ul>
-      </div>
+      <RecipeIngredientsTable
+        ingredients={scaledIngredients}
+        servings={servings}
+        onIncrease={() => setServings((s) => s + 1)}
+        onDecrease={() => setServings((s) => Math.max(1, s - 1))}
+      />
 
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">Instructions</h2>
-        <ol className="list-decimal list-inside">
+      <div className="mt-6 mb-4">
+        <h2 className="text-lg font-semibold mb-2">Instructions</h2>
+        <ol className="list-decimal list-inside text-sm text-gray-700">
           {recipe.instructions.map((step, idx) => (
             <li key={idx}>{step}</li>
           ))}
@@ -116,19 +132,25 @@ const RecipeDetails = () => {
       <div className="flex flex-col gap-2">
         <button
           onClick={handleUseRecipe}
-          className="bg-green-600 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+
+          className="bg-gray-600 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+
         >
           <CookingPot className="w-4 h-4" /> Use Recipe
         </button>
         <button
           onClick={handleAddToDiary}
-          className="bg-yellow-500 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+
+          className="bg-gray-500 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+
         >
           <NotebookPen className="w-4 h-4" /> Add to Diary
         </button>
         <button
           onClick={handleSaveFavorite}
-          className="bg-pink-500 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+
+          className="bg-gray-500 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+
         >
           <BookmarkPlus className="w-4 h-4" /> Save to Favorites
         </button>

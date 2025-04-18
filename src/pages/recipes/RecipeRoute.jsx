@@ -5,6 +5,7 @@ import SuggestedRecipe from "./SuggestedRecipe.jsx";
 import RecipeOverview from "./RecipeOverview.jsx";
 
 const RecipeRoute = () => {
+
   return (
     <Routes>
       <Route path="/" element={<RecipeOverview />} />
@@ -14,5 +15,6 @@ const RecipeRoute = () => {
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
+
 };
 export default RecipeRoute;
