@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { useState } from "react";
 import { Star, MoreHorizontal, X, Trash, ArrowRight, Eye } from "lucide-react";
 import EnergySummaryChart from "./EnergySummaryChart";
 
@@ -11,6 +12,47 @@ const FridgeItem = ({
   nutrition,
 }) => {
   const modalId = useId();
+  const [showMealSelect, setShowMealSelect] = useState(false);
+  const [selectedMeal, setSelectedMeal] = useState("");
+
+  const handleAddToDiaryClick = () => {
+    setShowMealSelect(true); // open dropdown on button click
+  };
+
+  const handleMealSelect = async (meal) => {
+    try {
+      // Optional: Close the modal
+      document.getElementById(modalId).close();
+
+      const token = localStorage.getItem("token"); // or however you store your JWT
+
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/diary`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          meal,
+          item: {
+            name,
+            quantity: 1,
+            nutrition,
+            source: "fridge",
+          },
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to add item to diary");
+
+      setShowMealSelect(false);
+      setSelectedMeal("");
+      alert("Item added to diary ✅");
+    } catch (err) {
+      console.error("Add to diary failed:", err);
+      alert("Something went wrong.");
+    }
+  };
 
   const handleDelete = () => {
     onDelete();
@@ -85,12 +127,31 @@ const FridgeItem = ({
             <EnergySummaryChart nutrition={nutrition} />
           </div>
 
-          <div className="modal-action">
-            <form method="dialog" className="w-full">
-              <button className="btn btn-block bg-black text-white">
+          <div className="modal-action flex flex-col gap-2">
+            {showMealSelect ? (
+              <select
+                className="select select-bordered w-full"
+                value={selectedMeal}
+                onChange={(e) => {
+                  const meal = e.target.value;
+                  setSelectedMeal(meal);
+                  if (meal) handleMealSelect(meal);
+                }}
+              >
+                <option value="">Select meal...</option>
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+              </select>
+            ) : (
+              <button
+                className="btn btn-block bg-black text-white"
+                onClick={handleAddToDiaryClick}
+              >
                 ADD PRODUCT TO DIARY <ArrowRight className="ml-2 w-4 h-4" />
               </button>
-            </form>
+            )}
           </div>
         </div>
       </dialog>
