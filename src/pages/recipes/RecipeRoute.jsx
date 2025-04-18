@@ -11,7 +11,7 @@ const RecipeRoute = () => {
             <Route path='/create' element={<CreateRecipe/>} />
             <Route path='/details' element={<RecipeDetails/>} />
             <Route path='/suggestions' element={<SuggestedRecipe/>} />
-            <Route path='*' element={<Navigate to='/' replace />} />
+            
         </Routes>
     );
 };

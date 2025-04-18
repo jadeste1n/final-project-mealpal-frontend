@@ -35,6 +35,14 @@ const BottomNav = () => {
         </Link>
         <div className="w-12" />
         <Link
+          to="/recipes/create"
+          className={`btn-ghost rounded-btn ${
+            pathname === "/recipes/create" ? "dock-active" : ""
+          }`}
+        >
+          <Soup className="w-5 h-5" />
+        </Link>
+        <Link
           to="/recipes"
           className={`btn-ghost rounded-btn ${
             pathname === "/recipes" ? "dock-active" : ""
