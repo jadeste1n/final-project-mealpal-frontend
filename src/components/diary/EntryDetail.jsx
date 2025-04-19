@@ -16,7 +16,9 @@ const EntryDetail = ({ item }) => {
 	const { setEntries, backendUrl } = useContext(AppContext);
 	const [productQuantity, setProductQuantity] = useState(quantity || 1);
 	const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1).toLowerCase();
-const [mealCategory, setMealCategory] = useState(capitalize(meal) || "Uncategorised");
+	const [mealCategory, setMealCategory] = useState(
+		capitalize(meal) || "Uncategorised"
+	);
 	console.log(item);
 
 	//Adjust Quantity Buttons
@@ -90,7 +92,7 @@ const [mealCategory, setMealCategory] = useState(capitalize(meal) || "Uncategori
 				<p className="text-sm text-gray-400">{brand}</p>
 			</div>
 			<div className="mb-4 w-100">
-				<h4 className="text-sm mb-2">Meal Category</h4>
+				<h4 className="text-sm mb-2 font-bold">Meal Category</h4>
 				<select
 					value={mealCategory}
 					className="select"
@@ -105,10 +107,17 @@ const [mealCategory, setMealCategory] = useState(capitalize(meal) || "Uncategori
 			</div>
 			{!ingredients.length && (
 				<>
-					<h4 className="text-sm">Quantity</h4>
-					<p className="text-xs text-gray-500 mb-4">
-						1 Quantity equals 100g/100ml
-					</p>
+					{source === "recipe" ? (
+						<h4 className="text-sm font-bold mb-4">Servings</h4>
+					) : (
+						<>
+							<h4 className="text-sm font-bold">Quantity</h4>
+							<p className="text-xs text-gray-500 mb-4">
+								1 Quantity equals 100g/100ml
+							</p>
+						</>
+					)}
+
 					<div className="bg-white rounded-sm border-2 inline-flex items-center h-fit my-auto mr-2 mb-4">
 						<button
 							onClick={decrementQuantity}
