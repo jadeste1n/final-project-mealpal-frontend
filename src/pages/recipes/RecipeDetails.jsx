@@ -100,19 +100,21 @@ const RecipeDetails = () => {
 		}
 	};
 
-	return (
-		<motion.div
-			className="p-4 max-w-3xl mx-auto pb-10"
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: 0.3 }}
-		>
-			<button
-				onClick={() => navigate(-1)}
-				className="text-sm text-blue-400 mb-4 inline-flex items-center hover:text-white"
-			>
-				<ArrowLeft className="w-4 h-4 mr-1" /> Back
-			</button>
+
+  return (
+    <motion.div
+      className="p-4 max-w-3xl mx-auto pb-36"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <button
+        onClick={() => navigate(-1)}
+        className="text-sm text-blue-400 mb-4 inline-flex items-center hover:text-white"
+      >
+        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+      </button>
+
 
 			<h1 className="text-2xl font-bold text-white mb-2">{recipe.title}</h1>
 			<img
@@ -137,32 +139,38 @@ const RecipeDetails = () => {
 				</ol>
 			</div>
 
-			<div className="flex flex-col gap-3">
-				<motion.button
-					whileTap={{ scale: 0.97 }}
-					whileHover={{ scale: 1.03 }}
-					onClick={handleUseRecipe}
-					className="bg-emerald-600 text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2"
-				>
-					<CookingPot className="w-5 h-5" /> Use Recipe
-				</motion.button>
-				<motion.button
-					whileTap={{ scale: 0.97 }}
-					whileHover={{ scale: 1.03 }}
-					onClick={handleAddToDiary}
-					className="bg-yellow-500 text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2"
-				>
-					<NotebookPen className="w-5 h-5" /> Add to Diary
-				</motion.button>
-				<motion.button
-					whileTap={{ scale: 0.97 }}
-					whileHover={{ scale: 1.03 }}
-					onClick={handleSaveFavorite}
-					className="bg-pink-500 text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2"
-				>
-					<BookmarkPlus className="w-5 h-5" /> Save to Favorites
-				</motion.button>
-			</div>
+
+      <div className="flex flex-col gap-3">
+        {recipe.source === 'fridge' && (
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            whileHover={{ scale: 1.03 }}
+            onClick={handleUseRecipe}
+            className="bg-emerald-600 text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2"
+          >
+            <CookingPot className="w-5 h-5" /> Use Recipe
+          </motion.button>
+        )}
+
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          whileHover={{ scale: 1.03 }}
+          onClick={handleAddToDiary}
+          className="bg-yellow-500 text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2"
+        >
+          <NotebookPen className="w-5 h-5" /> Add to Diary
+        </motion.button>
+
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          whileHover={{ scale: 1.03 }}
+          onClick={handleSaveFavorite}
+          className="bg-pink-500 text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2"
+        >
+          <BookmarkPlus className="w-5 h-5" /> Save to Favorites
+        </motion.button>
+      </div>
+
 
 			<RecipeFabMenu />
 		</motion.div>
