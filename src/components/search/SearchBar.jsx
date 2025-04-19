@@ -88,7 +88,7 @@ const SearchBar = ({ changeSearchQuery }) => {
 
 			if (query.length !== 0) {
 				//filter results if query is set
-				filtered = favorites.filter((item) =>
+				filtered = filtered.filter((item) =>
 					item.data.name?.toLowerCase().includes(query.toLowerCase())
 				);
 			}
@@ -112,7 +112,7 @@ const SearchBar = ({ changeSearchQuery }) => {
 
 			if (query.length !== 0) {
 				//filter results if query is set
-				filtered = favorites.filter((item) =>
+				filtered = filtered.filter((item) =>
 					item.data.name?.toLowerCase().includes(query.toLowerCase())
 				);
 			}
