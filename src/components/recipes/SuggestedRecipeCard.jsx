@@ -8,7 +8,7 @@ const SuggestedRecipeCard = ({ recipe, onSelect, onSave }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-xl mx-auto"
+      className="bg-white dark:bg-slate-800 text-gray-800 dark:text-white rounded-2xl shadow-xl overflow-hidden max-w-xl mx-auto"
     >
       <div className="relative">
         <img
@@ -19,21 +19,21 @@ const SuggestedRecipeCard = ({ recipe, onSelect, onSave }) => {
         />
         <button
           onClick={onSave}
-          className="absolute top-3 right-3 bg-white text-gray-800 hover:text-pink-500 rounded-full p-2 shadow-md transition"
+          className="absolute top-3 right-3 bg-white dark:bg-slate-700 text-gray-800 dark:text-white hover:text-pink-500 dark:hover:text-pink-400 rounded-full p-2 shadow-md transition"
         >
           <Bookmark className="w-5 h-5" />
         </button>
       </div>
 
       <div className="p-5">
-        <h2 className="text-xl font-semibold text-gray-800 flex items-center justify-center gap-2 mb-1">
-          <ChefHat className="w-5 h-5 text-green-600" /> Suggested Recipe
+        <h2 className="text-xl font-semibold flex items-center justify-center gap-2 mb-1">
+          <ChefHat className="w-5 h-5 text-green-600 dark:text-emerald-400" /> Suggested Recipe
         </h2>
-        <p className="text-sm text-gray-500 text-center mb-4">
-          We have cooked up something based on your preferences !!
+        <p className="text-sm text-gray-500 dark:text-gray-300 text-center mb-4">
+          We have cooked up something based on your preferences.
         </p>
 
-        <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-600 mb-4">
+        <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-600 dark:text-gray-300 mb-4">
           <span className="flex items-center gap-1">
             <Clock className="w-4 h-4" /> {recipe.readyInMinutes || 30} min
           </span>
@@ -46,8 +46,8 @@ const SuggestedRecipeCard = ({ recipe, onSelect, onSave }) => {
         </div>
 
         <div className="text-center">
-          <h3 className="text-lg font-bold text-gray-800 mb-1">{recipe.title}</h3>
-          <p className="text-sm text-gray-600 line-clamp-2">
+          <h3 className="text-lg font-bold mb-1">{recipe.title}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
             {recipe.description || 'A delicious meal crafted just for you based on your selected criteria.'}
           </p>
         </div>

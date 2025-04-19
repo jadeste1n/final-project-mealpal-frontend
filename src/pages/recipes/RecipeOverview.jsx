@@ -29,7 +29,7 @@ const RecipeOverview = () => {
 
   const handleRemove = async (favoriteId) => {
     try {
-      await api.delete(`/favorites/${favoriteId}`);
+      await api.delete(`/favorites/items/${favoriteId}`);
       toast.success('Recipe removed from favorites.');
       setRecipes((prev) => prev.filter((f) => f._id !== favoriteId));
     } catch (err) {
