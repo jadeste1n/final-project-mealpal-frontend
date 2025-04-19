@@ -42,17 +42,21 @@ const RecipeDetails = () => {
 					  }`,
 		}));
 
-	const handleUseRecipe = async () => {
-		try {
-			await api.post("/recipes/use", {
-				usedIngredients: recipe.ingredients.map((i) => ({ name: i.name || i })),
-			});
-			toast.success("Ingredients deducted from fridge!");
-		} catch (err) {
-			console.error("Error using recipe:", err);
-			toast.error("Failed to deduct ingredients.");
-		}
-	};
+		const handleUseRecipe = async () => {
+			try {
+			  await api.post('/recipes/use', {
+				usedIngredients: (recipe.ingredients || []).map(i => {
+				  if (typeof i === 'string') return { name: i };
+				  if (typeof i === 'object') return { name: i.name || 'unknown' };
+				  return { name: 'unknown' };
+				})
+			  });
+			  toast.success('Ingredients deducted from fridge!');
+			} catch (err) {
+			  console.error('Error using recipe:', err);
+			  toast.error('Failed to deduct ingredients.');
+			}
+		  };
 
 	const handleAddToDiary = async () => {
 		try {
