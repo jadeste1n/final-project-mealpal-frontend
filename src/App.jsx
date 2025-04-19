@@ -7,7 +7,7 @@ import RootLayout from "./layouts/RootLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 
 import InventoryOverview from "./pages/inventory/InventoryOverview";
-import Diary from "./pages/diary/diary";
+import Diary from "./pages/diary/Diary";
 import Search from "./pages/search/Search";
 import RecipeRoute from "./pages/recipes/RecipeRoute.jsx";
 import AccountSettings from "./pages/account/AccountSettings";
