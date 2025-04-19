@@ -82,7 +82,12 @@ const RecipeDetails = () => {
           referenceId: recipe.id,
           name: recipe.title,
           image: recipe.image || '/images/placeholder.jpg',
-          nutrition: recipe.nutrition,
+          nutrition:{
+            calories: recipe.nutrition?.calories || 0,
+            protein: recipe.nutrition?.protein || 0,
+            carbs: recipe.nutrition?.carbs || 0,
+            fat: recipe.nutrition?.fat || 0
+          },
           source: 'spoonacular',
           ingredients: recipe.ingredients.map(i =>
             typeof i === 'string' ? i : `${i.name} ${i.amount || ''}`.trim()
