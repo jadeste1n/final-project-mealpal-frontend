@@ -62,7 +62,8 @@ const SearchBar = ({ changeSearchQuery }) => {
 			console.log("Response from fetch:", data); // DEBUG
 			let filtered = data;
 
-			if (query.length !== 0) {//filter results if query is set
+			if (query.length !== 0) {
+				//filter results if query is set
 				filtered = data.filter((item) =>
 					item.name?.toLowerCase().includes(query.toLowerCase())
 				);
@@ -80,10 +81,37 @@ const SearchBar = ({ changeSearchQuery }) => {
 		setIsLoading(true);
 		try {
 			await fetchFavorites();
-			let filtered = favorites;
+			// Filter out any favorites where type === "recipe"
+			let filtered = favorites.filter((item) => item.type !== "recipe");
+
 			console.log(filtered);
-			
-			if (query.length !== 0) {//filter results if query is set
+
+			if (query.length !== 0) {
+				//filter results if query is set
+				filtered = favorites.filter((item) =>
+					item.data.name?.toLowerCase().includes(query.toLowerCase())
+				);
+			}
+
+			setSearchResults(filtered);
+		} catch (err) {
+			console.error(err);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const fetchRecipesfromFavorites = async (query) => {
+		setIsLoading(true);
+		try {
+			await fetchFavorites();
+			// Filter out any favorites where type === "recipe"
+			let filtered = favorites.filter((item) => item.type === "recipe");
+
+			console.log(filtered);
+
+			if (query.length !== 0) {
+				//filter results if query is set
 				filtered = favorites.filter((item) =>
 					item.data.name?.toLowerCase().includes(query.toLowerCase())
 				);
@@ -105,7 +133,7 @@ const SearchBar = ({ changeSearchQuery }) => {
 		}, 500);
 
 		return () => clearTimeout(delay);
-	}, [searchInput]); //whenever searchInput changes wait 500ms before setting delayedQuery 
+	}, [searchInput]); //whenever searchInput changes wait 500ms before setting delayedQuery
 
 	useEffect(() => {
 		// fetch data when delayedQuery changes
@@ -128,7 +156,7 @@ const SearchBar = ({ changeSearchQuery }) => {
 			fetchIngredientsfromFridge(delayedQuery);
 		}
 		if (selectedTab === "recipes") {
-			fetchIngredientsFromDb(delayedQuery);
+			fetchRecipesfromFavorites(delayedQuery);
 		}
 
 		if (delayedQuery.length === 0 && selectedTab === "new") {
