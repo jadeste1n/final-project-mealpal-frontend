@@ -11,9 +11,10 @@ import RecipeFabMenu from '../../components/recipes/RecipeFabMenu';
 const SuggestedRecipe = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { user } = useAuth();
-    const userId = user?._id;
+    //const { user } = useAuth();
+    //const userId = user?._id;
   
+    const userId = '67fbf2fe846c53686b5c6ffa'; // FOR TESTING THE PAGES
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(false);
   
@@ -22,13 +23,13 @@ const SuggestedRecipe = () => {
         setLoading(true);
         const params = new URLSearchParams(location.search);
         const useFridge = params.get('fridge') === 'true';
-        const mealType = params.get('mealType') || 'Dinner';
+        const mealType = params.get('mealType') || 'dinner';
         const maxReadyTime = params.get('maxReadyTime') || 30;
   
         try {
           let body;
           if (useFridge) {
-            const fridgeItems = ['chicken', 'broccoli'];
+            const fridgeItems = ['chicken', 'broccoli']; // Replace with real fridge items
             body = { ingredients: fridgeItems, refresh: true };
           } else {
             body = {
@@ -38,7 +39,9 @@ const SuggestedRecipe = () => {
             };
           }
   
+          console.log('Body sent to backend:', body);
           const res = await api.post('/recipes/suggest', body);
+          console.log('Response:', res.data);
           setRecipe(res.data[0]);
         } catch (err) {
           console.error('Error fetching recipe:', err);
@@ -51,47 +54,32 @@ const SuggestedRecipe = () => {
     }, [location.search]);
   
     const handleSave = async () => {
-        try {
-          await api.post('/favorites/items', {
-            type: 'recipe',
-            data: {
-              referenceId: recipe.id,
-              name: recipe.title,
-              image: recipe.image || '/images/placeholder.jpg',
-              nutrition: recipe.nutrition,
-              source: 'spoonacular',
-              ingredients: recipe.ingredients.map(i =>
-                typeof i === 'string' ? i : `${i.name} ${i.amount || ''}`.trim()
-              ),
-              instructions: recipe.instructions
-            }
-          });
-          toast.success('Recipe saved to favorites!');
-        } catch (err) {
-          console.error('Error saving favorite:', err);
-          toast.error('Failed to save favorite.');
-        }
-      };
+      try {
+        await api.post(`/favorites/${userId}`, {
+          type: 'recipe',
+          data: {
+            id: recipe.id,
+            name: recipe.title,
+            image: recipe.image,
+            nutrition: recipe.nutrition,
+            source: 'spoonacular'
+          }
+        });
+        alert('Recipe saved!');
+      } catch (err) {
+        console.error('Error saving recipe:', err);
+        alert('Failed to save recipe.');
+      }
+    };
   
     const handleSelect = () => {
       navigate('/recipes/details', { state: { recipe } });
     };
   
     return (
-      <div className="p-4 min-h-screen flex flex-col items-center justify-start">
-        <h1 className="text-2xl font-bold text-white mb-6">Suggested Recipe</h1>
-  
-        {loading && (
-          <motion.div
-            className="text-center text-gray-400 mt-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <Loader2 className="w-6 h-6 animate-spin inline-block mr-2" />
-            Fetching a recipe...
-          </motion.div>
-        )}
-  
+      <div className="p-4">
+        <h1 className="text-xl font-semibold mb-4">Suggested Recipe</h1>
+        {loading && <p>Loading recipe...</p>}
         {!loading && recipe && (
           <SuggestedRecipeCard
             recipe={recipe}
@@ -99,21 +87,17 @@ const SuggestedRecipe = () => {
             onSelect={handleSelect}
           />
         )}
-  
         {!loading && !recipe && (
-          <p className="text-gray-400 mt-4">No recipes found. Try different filters.</p>
+          <p className="text-center text-gray-400 mt-4">No recipes found. Try different filters.</p>
         )}
-  
         <Link
           to="/recipes/create"
-          className="mt-8 inline-flex items-center gap-2 text-white px-5 py-3 rounded-full bg-slate-700 hover:bg-slate-600 transition"
+          className="mt-6 inline-block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
         >
-          <PlusCircle className="w-5 h-5" /> Create Another Recipe
+          Create Another Recipe
         </Link>
-        <RecipeFabMenu />
       </div>
     );
   };
   
   export default SuggestedRecipe;
-  
