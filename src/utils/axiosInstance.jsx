@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: ['https://mealpal-backend.onrender.com', 'http://localhost:5050'],
+    baseURL: import.meta.env.VITE_BACKEND_URL,
     headers: {
         'Conten-Type': 'application/json'
     },
