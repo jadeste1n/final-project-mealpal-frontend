@@ -287,7 +287,7 @@ const IngredientSearchResult = ({ ingredient, inDrawer = false }) => {
 								{isFavorite ? (
 									<Star className="fill-yellow-500 text-yellow-500" />
 								) : (
-									<Star />
+									<Star className="text-yellow-500"/>
 								)}{" "}
 								{/* saves ingredient to favorites -> add to backend favorites POST */}
 							</button>

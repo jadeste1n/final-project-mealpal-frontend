@@ -10,7 +10,6 @@ import {
 import { toast } from "react-toastify";
 import Modal from "@/components/general/Modal";
 import InfoRow from "@/components/account/InfoRow";
-import { Sun, Moon } from "lucide-react";
 
 const AccountSettings = () => {
   const { setIsAuthenticated } = useAuth();
@@ -28,19 +27,6 @@ const AccountSettings = () => {
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      setIsDarkMode(false);
-      document.documentElement.setAttribute("data-theme", "light");
-    }
-  }, []);
 
   const handleChangeModal = (field) => {
     switch (field) {
@@ -378,26 +364,6 @@ const AccountSettings = () => {
     <div className="max-w-xl mx-auto mt-10 space-y-6">
       <div className="relative mb-6">
         <h2 className="text-xl font-semibold text-center">Profile</h2>
-
-        <div className="absolute right-0 top-1/2 -translate-y-1/2">
-          <label className="cursor-pointer flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={isDarkMode}
-              onChange={() => {
-                const newMode = !isDarkMode;
-                setIsDarkMode(newMode);
-                localStorage.setItem("theme", newMode ? "dark" : "light");
-                document.documentElement.setAttribute(
-                  "data-theme",
-                  newMode ? "dark" : "light"
-                );
-              }}
-              className="toggle"
-            />
-            {isDarkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </label>
-        </div>
       </div>
 
       {/* Account section */}
