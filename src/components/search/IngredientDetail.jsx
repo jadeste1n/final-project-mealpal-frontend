@@ -2,16 +2,25 @@ const IngredientDetail = ({ ingredient }) => {
 	const ingredientData = ingredient?.data || ingredient;
 	const { name, brand, nutrition = {} } = ingredientData;
 
-	console.log(ingredient)
+	console.log(ingredient);
 
 	return (
 		<div className="p-4">
 			<h3 className="text-lg font-bold">{name}</h3>
 			<p className="text-sm text-gray-400">{brand}</p>
 
-			<p className="text-xs text-gray-500 mt-4">
-				Nutritional Data for 1 Quantity: <span className="font-bold">100 g / 100 ml</span>
-			</p>
+			{ingredient.type === "recipe" ? (
+				<p className="text-xs text-gray-500 mt-4">
+					Nutritional Data for <span className="font-bold">1 Serving</span>
+				</p>
+			) : (
+				ingredient.type !== "recipe" && (
+					<p className="text-xs text-gray-500 mt-4">
+						Nutritional Data for 1 Quantity:{" "}
+						<span className="font-bold">100 g / 100 ml</span>
+					</p>
+				)
+			)}
 
 			<table className="mt-2 w-full text-sm border-collapse">
 				<tbody>
