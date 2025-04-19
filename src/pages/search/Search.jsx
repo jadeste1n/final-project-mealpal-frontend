@@ -29,7 +29,7 @@ const Search = () => {
 			{/* Selection Where to Add Items To -> Controls Conditional Rendering */}
 			<h1 className="text-xl font-semibold mb-4">Select Items to Add</h1>
 			<select
-				className="select select-ghost mb-4 w-full text-center bg-primary font-bold"
+				className="select text-primary-content select-ghost mb-4 w-full text-center bg-primary font-bold"
 				value={addToSelection}
 				onChange={(e) => setAddToSelection(e.target.value)}
 			>
