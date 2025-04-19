@@ -100,6 +100,7 @@ const InventoryOverview = () => {
           <FridgeItem
             key={item._id}
             name={item.name}
+            brand={item.brand}
             nutrition={item.nutrition}
             isFavorite={item.isFavorite}
             onToggleFavorite={() => handleToggleFavorite(item, item.isFavorite)}
