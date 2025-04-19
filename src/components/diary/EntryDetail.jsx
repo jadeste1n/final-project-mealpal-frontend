@@ -91,11 +91,11 @@ const EntryDetail = ({ item }) => {
 				<h3 className="text-lg font-bold">{name}</h3>
 				<p className="text-sm text-gray-400">{brand}</p>
 			</div>
-			<div className="mb-4 w-100">
+			<div className="mb-4 w-full">
 				<h4 className="text-sm mb-2 font-bold">Meal Category</h4>
 				<select
 					value={mealCategory}
-					className="select"
+					className="select w-full"
 					onChange={(e) => setMealCategory(e.target.value)}
 				>
 					<option>uncategorised</option>
