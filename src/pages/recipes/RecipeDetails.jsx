@@ -77,29 +77,33 @@ const RecipeDetails = () => {
 		}
 	};
 
-	const handleSaveFavorite = async () => {
-		try {
-			await api.post("/favorites/items", {
-				type: "recipe",
-				data: {
-					referenceId: recipe.id,
-					name: recipe.title,
-					image: recipe.image || "/images/placeholder.jpg",
-					nutrition: recipe.nutrition,
-					source: "spoonacular",
-					ingredients: recipe.ingredients.map((i) =>
-						typeof i === "string" ? i : `${i.name} ${i.amount || ""}`.trim()
-					),
-					instructions: recipe.instructions,
-				},
-			});
-			toast.success("Recipe saved to favorites!");
-		} catch (err) {
-			console.error("Error saving favorite:", err);
-			toast.error("Failed to save favorite.");
-		}
-	};
-
+  const handleSaveFavorite = async () => {
+    try {
+      await api.post('/favorites/items', {
+        type: 'recipe',
+        data: {
+          referenceId: recipe.id,
+          name: recipe.title,
+          image: recipe.image || '/images/placeholder.jpg',
+          nutrition:{
+            calories: recipe.nutrition?.calories || 0,
+            protein: recipe.nutrition?.protein || 0,
+            carbs: recipe.nutrition?.carbs || 0,
+            fat: recipe.nutrition?.fat || 0
+          },
+          source: 'spoonacular',
+          ingredients: recipe.ingredients.map(i =>
+            typeof i === 'string' ? i : `${i.name} ${i.amount || ''}`.trim()
+          ),
+          instructions: recipe.instructions
+        }
+      });
+      toast.success('Recipe saved to favorites!');
+    } catch (err) {
+      console.error('Error saving favorite:', err);
+      toast.error('Failed to save favorite.');
+    }
+  };
 
   return (
     <motion.div
