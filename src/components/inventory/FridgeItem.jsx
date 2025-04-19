@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 const FridgeItem = ({
   name,
+  brand,
   isFavorite,
   onToggleFavorite,
   onOpenMenu,
@@ -74,11 +75,16 @@ const FridgeItem = ({
     <>
       {/* Card-style item row */}
       <div className="flex items-center justify-between bg-base-200 transition p-4 rounded-xl mb-3">
-        <div>
+        <div className="text-left">
           <span className="text-base font-semibold block">
             {toTitleCase(name)}
           </span>
           {/* You can add more meta info here if needed */}
+          {brand && (
+            <span className="text-sm text-left text-gray-400">
+              {toTitleCase(brand)}
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-3">
